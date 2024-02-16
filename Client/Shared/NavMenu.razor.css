@@ -1,0 +1,57 @@
+.nav-black {
+    background-color: #000000 !important;
+    color: white !important;
+}
+
+.btn-custom {
+    color: whitesmoke !important;
+    border-color: whitesmoke !important;
+    background-color: whitesmoke !important;
+}
+
+    .btn-custom span {
+        color: white !important;
+    }
+
+.offcanvas-custom {
+    background-color: #0D0D0D !important;
+    color: white !important;
+}
+
+    .offcanvas-custom .offcanvas-body .nav-link {
+        color: white !important;
+    }
+
+.nav-link:hover {
+    color: #ffc107; /* Change the color to your desired hover color */
+    text-decoration: underline; /* Underline on hover, adjust as needed */
+}
+
+/* Add transition for a smooth hover effect */
+.nav-link {
+    transition: color 0.3s ease;
+}
+
+    /* Adjust the styles for active link if needed */
+    .nav-link.active {
+        color: #ffc107;
+        font-weight: bold; /* Optionally make the active link bold */
+    }
+
+    .login{
+        color: white;
+
+    }
+.login:hover{
+        background-color: whitesmoke;
+        color: black;
+    }
+.signup{
+    color: black;
+    background-color: whitesmoke;
+
+}
+    .signup:hover {
+        color: white;
+        background-color: #000000;
+    }
