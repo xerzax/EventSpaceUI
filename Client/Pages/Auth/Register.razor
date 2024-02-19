@@ -1,0 +1,80 @@
+﻿@page "/register"
+@using EventSpaceUI.Client.Utilities
+@inject IApiService _apiService
+
+<div class="container-fluid p-0">
+    <div class="row justify-content-center align-items-center min-vh-100 bg-dark">
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
+                            <img src="images/vector2.png" class="img-fluid rounded-start mb-3" style="width: 80%;" alt="...">
+                            <small class="text-center text-secondary">Join the events now with a membership</small>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="header-text text-center mb-4 text-white">
+                                <h2>Register</h2>
+                            </div>
+                            <form @onsubmit="RegisterUser">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Name" @bind="registerModel.Name">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="email" class="form-control form-control-lg bg-light fs-6" placeholder="Email address" @bind="registerModel.Email">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control form-control-lg bg-light fs-6" placeholder="Password" @bind="registerModel.Password">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control form-control-lg bg-light fs-6" placeholder="Confirm Password" @bind="registerModel.ConfirmPassword">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <select class="form-control form-control-lg bg-light fs-6" @bind="registerModel.Role">
+                                        <option value="Organizer">Organizer</option>
+                                        <option value="User">User</option>
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <button type="submit" class="btn btn-lg btn-outline-light w-100 fs-6">Register</button>
+                                </div>
+                                @if (!string.IsNullOrEmpty(registerResultMessage))
+                                {
+                                    <p class="text-center mt-3 text-white">@registerResultMessage</p>
+                                }
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterModel registerModel = new RegisterModel();
+    private string registerResultMessage;
+
+    public class RegisterModel
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
+        public string Role { get; set; }
+    }
+
+    private async Task RegisterUser()
+    {
+        var response = await _apiService.Register(registerModel);
+
+        if (response == "Registration successful")
+        {
+            registerResultMessage = response;
+        }
+        else
+        {
+            registerResultMessage = response;
+        }
+    }
+}

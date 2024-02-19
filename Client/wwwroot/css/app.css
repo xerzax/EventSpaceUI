@@ -12,6 +12,12 @@ a, .btn-link {
     color: #0071c1;
 }
 
+.box-area {
+    
+    width: 930px;
+
+}
+
 .bg-image {
     background: url(../images/mainimage.jpg);
     background-blend-mode: multiply;

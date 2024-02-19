@@ -7,6 +7,7 @@ using System.Text.Json;
 using Microsoft.JSInterop;
 using Blazored.SessionStorage;
 using System;
+using static EventSpaceUI.Client.Pages.Auth.Register;
 
 namespace EventSpaceUI.Client.Utilities
 {
@@ -93,6 +94,23 @@ namespace EventSpaceUI.Client.Utilities
             }
 
             return "Invalid email or password.";
+        }
+         
+        public async Task<string> Register(RegisterModel registerModel)
+        {
+            var url = "Account/register";
+            string fullUrl = $"{_baseUrl}/{url}";
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(fullUrl, registerModel);
+            if (response.IsSuccessStatusCode)
+            {
+                return "Registration successful";
+            }
+            else
+            {
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                return "Registration Failed:" + errorResponse;
+            }
+
         }
     }
 }

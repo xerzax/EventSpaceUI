@@ -3,31 +3,60 @@
 @inject HttpClient HttpClient
 @inject IApiService _apiService
 
-<div class="container-fluid d-flex justify-content-center align-items-center vh-100 bg-dark">
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title text-center text-white">Login</h3>
-
-            <form @onsubmit="LoginUser">
-                <div class="form-group">
-                    <label for="email" class="text-white">Email</label>
-                    <input id="email" class="form-control" @bind="loginModel.Email" />
+<div class="container-fluid p-0">
+    <!----------------------- Login Container -------------------------->
+    <div class="row justify-content-center align-items-center min-vh-100 bg-dark">
+        <div class="col-md-8">
+            <div class="row border rounded-5 p-3 bg-dark shadow box-area ">
+                <!--------------------------- Left Box ----------------------------->
+                <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box">
+                    <div class="featured-image mb-3">
+                        <img src="images/vector2.png" class="img-fluid rounded-start" style="width: 80%;" alt="...">
+                    </div>
+                    <h3 class="text-white fs-3">Hello, Again</h3>
+                    <small class="text-secondary text-center" style="width: 17rem;">Join experienced Designers on this platform.</small>
                 </div>
-                <div class="form-group">
-                    <label for="password" class="text-white">Password:</label>
-                    <input id="password" class="form-control" @bind="loginModel.Password" type="password" />
+                <!--------------------------- Right Box ----------------------------->
+                <div class="col-md-6 right-box">
+                    <div class="row align-items-center">
+                        <div class="header-text text-center mb-4 text-white">
+                            <h2>Login</h2>
+                            <p>We are happy to have you back.</p>
+                        </div>
+                        <form @onsubmit="LoginUser" class="w-100">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Email address" @bind="loginModel.Email">
+                            </div>
+                            <div class="input-group mb-1">
+                                <input type="password" class="form-control form-control-lg bg-light fs-6" placeholder="Password" @bind="loginModel.Password">
+                            </div>
+                            <div class="input-group mb-5 d-flex justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="formCheck" @bind="loginModel.RememberMe">
+                                    <label for="formCheck" class="form-check-label text-secondary"><small>Remember Me</small></label>
+                                </div>
+                                <div class="forgot">
+                                    <small><a href="#" class="text-info">Forgot Password?</a></small>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <button type="submit" class="btn btn-lg btn-outline-light w-100 fs-6">Login</button>
+                            </div>
+                            <div class="row">
+                                <small class="text-white-50">Don't have account? <a href="#" class="text-info">Sign Up</a></small>
+                            </div>
+                        </form>
+                        @if (!string.IsNullOrEmpty(loginResultMessage))
+                        {
+                            <p class="text-center mt-3 text-white">@loginResultMessage</p>
+                        }
+                        @if (!string.IsNullOrEmpty(token))
+                        {
+                            <p class="text-center mt-3 text-white">JWT Token: @token</p>
+                        }
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-outline-light btn-block mt-2">Login</button>
-            </form>
-
-            @if (!string.IsNullOrEmpty(loginResultMessage))
-            {
-                <p class="text-center mt-3 text-white">@loginResultMessage</p>
-            }
-            @if (!string.IsNullOrEmpty(token))
-            {
-                <p class="text-center mt-3 text-white">JWT Token: @token</p>
-            }
+            </div>
         </div>
     </div>
 </div>

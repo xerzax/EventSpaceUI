@@ -1,3 +1,4 @@
+using Blazored.Modal;
 using Blazored.SessionStorage;
 using EventSpaceUI.Client;
 using EventSpaceUI.Client.Utilities;
