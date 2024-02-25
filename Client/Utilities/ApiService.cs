@@ -65,6 +65,28 @@ namespace EventSpaceUI.Client.Utilities
             }
         }
 
+        public async Task<T> CallApiAsyncForm<T>(string url, HttpMethod method, object data = null)
+        {
+            var token = await _sessionStorageService.GetItemAsync<string>("JWT_TOKEN");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            HttpResponseMessage response;
+            string fullUrl = $"{_baseUrl}/{url}";
+            HttpContent requestContent = (MultipartFormDataContent)data;
+            response = await _httpClient.PostAsync(fullUrl, requestContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<T>();
+            }
+            else
+            {
+                return default;
+            }
+        }
+
         public async Task<string> Login(LoginModel loginModel)
         {
             var url = "Account/Login";

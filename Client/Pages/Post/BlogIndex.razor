@@ -3,62 +3,61 @@
 @inject HttpClient HttpClient
 @inject IApiService _apiService
 
-<div class="container-fluid p-0">
-    <div class="row justify-content-center align-items-center min-vh-100 bg-dark">
-        <div class="row align-items-center">
-            <div class="col-8">
-                <div class="card-container">
-                    @if (blogs != null)
+<div class="container-fluid p-4">
+    <div class="row mt-5">
+        <!-- Displaying Uploaded Blogs -->
+        <div class="col-lg-8">
+            <div class="row">
+                @if (blogs != null && blogs.Any())
+                {
+                    @foreach (var blog in blogs)
                     {
-                        @foreach (var blog in blogs)
-                        {
-                            <div class="card mb-3">
-                                <div class="card-body mt-3">
-                                    <h5 class="card-title text-light">@blog.Title</h5>
-                                    <p class="card-text text-light">@blog.Content</p>
-                                    <p class="card-text text-light">@blog.PhotoName</p>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-white">@blog.Title</h5>
+                                    <p class="card-text text-white">@blog.Content</p>
+                                    <p class="card-text text-white">@blog.PhotoName</p>
                                 </div>
                             </div>
-                        }
-                    }
-                    else
-                    {
-                        <p class="text-white-50"><em>Loading...</em></p>
-                    }
-                </div>
-            </div>
-            <div class="col-4">
-                <!----------------------- Blog Upload Container -------------------------->
-                <div class="d-flex justify-content-center align-items-center min-vh-100">
-                    <div class="col-md-8">
-                        <div class="row align-items-center">
-                            <div class="header-text text-center mb-4 text-white">
-                                <h2>Upload Blog</h2>
-                                <p>Upload your event memories!</p>
-                            </div>
-                            <form @onsubmit="CreateBlog" class="w-100">
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Blog Title" @bind="newBlog.Title">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Photo Name" @bind="newBlog.PhotoName">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <textarea id="Content" class="form-control form-control-lg bg-light fs-6" placeholder="Blog Content" @bind="newBlog.Content"></textarea>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <button type="submit" class="btn btn-lg btn-outline-light w-100 fs-6">Create Blog</button>
-                                </div>
-                            </form>
                         </div>
-                    </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted"><em>No blogs found.</em></p>
+                }
+            </div>
+        </div>
+
+        <!-- Blog Upload Form -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4 text-center text-white">Upload Blog</h2>
+                    <form @onsubmit="CreateBlog" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Blog Title" id="blogTitle" @bind="newBlog.Title">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="photoName" placeholder="Photo Name" @bind="newBlog.PhotoName">
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="content" rows="5" placeholder="Content" @bind="newBlog.Content"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fileUpload" class="form-label text-light">Upload Image</label>
+                            @* <input type="file" @bind="newBlog.File" class="form-control" id="fileUpload"> *@
+                            <InputFile OnChange="@OnInputFileChange" class="form-control" id="fileUpload" />
+
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100">Create Blog</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
 @* @page "/blog"
 @using EventSpaceUI.Client.Utilities
@@ -70,11 +69,11 @@
         <div class="row align-items-center">
             <div class="col-8">
                 <div class="card-container">
-                    @if (blogs != null)
+                    @if (blogs != null && blogs.Any())
                     {
                         @foreach (var blog in blogs)
                         {
-                            <div class="card@(blog == blogs.First() ? " mt-3" : "") mb-3">
+                            <div class="card mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title text-light">@blog.Title</h5>
                                     <p class="card-text text-light">@blog.Content</p>
@@ -119,72 +118,4 @@
         </div>
     </div>
 </div> *@
-
-
- 
-
-
-@* 
-<div class="container-fluid p-0">
-	<!----------------------- Blog Upload Container -------------------------->
-	<div class="row justify-content-center align-items-center min-vh-100 bg-dark">
-		<div class="col-md-8">
-			<div class="row align-items-center">
-				<div class="header-text text-center mb-4 text-white">
-					<h2>Upload Blog</h2>
-					<p>Upload your event memories!</p>
-				</div>
-				<form @onsubmit="CreateBlog" class="w-100">
-					<div class="input-group mb-3">
-						<input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Blog Title" @bind="newBlog.Title">
-					</div>
-					<div class="input-group mb-3">
-						<input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Photo Name" @bind="newBlog.PhotoName">
-					</div>
-					<div class="input-group mb-3">
-						<textarea id="Content" class="form-control form-control-lg bg-light fs-6" placeholder="Blog Content" @bind="newBlog.Content"></textarea>
-					</div>
-					<div class="input-group mb-3">
-						<button type="submit" class="btn btn-lg btn-outline-light w-100 fs-6">Create Blog</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div> *@
-
-@* <div class="container-fluid p-0">
-	<!----------------------- Blog Upload Container -------------------------->
-	<div class="row justify-content-center align-items-center min-vh-100 bg-dark">
-		<div class="row">
-    <div class="col-8">col-8</div>
-    <div class="col-4">col-4</div>
-  </div>
-		<div class="col-md-4">
-			<div class="card shadow-lg">
-				<div class="card-body">
-					<div class="header-text text-center mb-4 text-white">
-						<h2>Upload Blog</h2>
-						<p>Upload your event memories!</p>
-					</div>
-					<form @onsubmit="CreateBlog" class="w-100">
-						<div class="mb-3">
-							<input type="text" class="form-control form-control-lg" placeholder="Blog Title" @bind="newBlog.Title">
-						</div>
-						<div class="mb-3">
-							<input type="text" class="form-control form-control-lg" placeholder="Photo Name" @bind="newBlog.PhotoName">
-						</div>
-						<div class="mb-3">
-							<textarea id="Content" class="form-control form-control-lg" rows="5" placeholder="Blog Content" @bind="newBlog.Content"></textarea>
-						</div>
-						<div class="mb-3">
-							<button type="submit" class="btn btn-lg btn-outline-light w-100">Create Blog</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
- *@
 
