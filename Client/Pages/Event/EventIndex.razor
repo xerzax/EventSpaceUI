@@ -1,0 +1,36 @@
+﻿@page "/eventindex"
+
+@using EventSpaceUI.Client.Utilities
+@using static EventSpaceUI.Client.Pages.Event.EventForm
+@inject IApiService _apiService
+
+<div class="container">
+    <h2 class="text-center mb-4 text-white">Events</h2>
+    <div class="row">
+        @foreach (var evt in Events)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card bg-dark text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">@evt.Name</h5>
+                        <p class="card-text">Venue: @evt.Venue</p>
+                        <p class="card-text">Date: @evt.Date.ToShortDateString()</p>
+                        <p class="card-text">Artist: @evt.Artist</p>
+                        <p class="card-text">Starting Price: @evt.StartingPrice</p>
+                        <p class="card-text">Total Seats: @evt.TotalSeats</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<EventResponseDTO> Events;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var endpoint = "Event/GetAllEvents";
+        Events = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
+    }
+}
