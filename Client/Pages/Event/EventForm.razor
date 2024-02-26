@@ -1,74 +1,99 @@
 ﻿@page "/eventform"
 
-
+@using EventSpaceUI.Client.Utilities
+@inject HttpClient HttpClient
+@inject IApiService _apiService
 
 <div class="page-wrapper p-t-45 p-b-50">
-    <div class="wrapper wrapper--w790">
-        <div class="card card-5 mt-3">
-            <div class="card-heading">
-                <h2 class="card-title text-light text-center">Event Registration Form</h2>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    <div class="form-row m-b-55">
-                        <div class="name">Event Name</div>
-                        <div class="value">
-                            <input class="input--style-5" type="text" name="Name" placeholder="Event Name">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Venue</div>
-                        <div class="value">
-                            <input class="input--style-5" type="text" name="Venue" placeholder="Venue">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Date</div>
-                        <div class="value">
-                            <input class="input--style-5" type="date" name="Date">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Artist</div>
-                        <div class="value">
-                            <input class="input--style-5" type="text" name="Artist" placeholder="Artist">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Starting Price</div>
-                        <div class="value">
-                            <input class="input--style-5" type="number" name="StartingPrice" placeholder="Starting Price">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Total Seats</div>
-                        <div class="value">
-                            <input class="input--style-5" type="number" name="TotalSeats" placeholder="Total Seats">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Sold Seats</div>
-                        <div class="value">
-                            <input class="input--style-5" type="number" name="SoldSeats" placeholder="Sold Seats">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Amount Raised</div>
-                        <div class="value">
-                            <input class="input--style-5" type="number" name="AmountRaised" placeholder="Amount Raised">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="name">Available Seats</div>
-                        <div class="value">
-                            <input class="input--style-5" type="number" name="AvailableSeats" placeholder="Available Seats">
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn btn--radius-2 btn--red" type="submit">Register</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+	<div class="wrapper wrapper--w790">
+		<div class="card card-5 mt-3">
+			<div class="card-heading">
+				<h2 class="card-title text-light text-center">Event Registration Form</h2>
+			</div>
+			<div class="card-body">
+				<EditForm Model="@newEvent" OnValidSubmit="CreateEvent">
+					<DataAnnotationsValidator />
+					<ValidationSummary />
+
+					<div class="form-row m-b-55">
+						<div class="name">Event Name</div>
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newEvent.Name" placeholder="Event Name" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Venue</div>
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newEvent.Venue" placeholder="Venue" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Date</div>
+						<div class="value">
+							<InputDate class="input--style-5" @bind-Value="newEvent.Date" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Artist</div>
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newEvent.Artist" placeholder="Artist" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Starting Price</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newEvent.StartingPrice" placeholder="Starting Price" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Total Seats</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newEvent.TotalSeats" placeholder="Total Seats" />
+						</div>
+					</div>
+					<div>
+						<button class="btn btn--radius-2 btn--red" type="submit">Register</button>
+					</div>
+				</EditForm>
+			</div>
+		</div>
+	</div>
 </div>
+
+@code {
+
+	private List<EventResponseDTO> evt;
+	private EventResponseDTO newEvent = new EventResponseDTO();
+
+	public class EventResponseDTO
+	{
+		public int Id { get; set; }
+		public string? Name { get; set; }
+		public string? Venue { get; set; }
+		public DateTime Date { get; set; }
+		public string? Artist { get; set; }
+		public decimal StartingPrice { get; set; }
+		public int TotalSeats { get; set; }
+	}
+
+	private async Task CreateEvent()
+	{
+		try
+		{
+			var createdEvent = await _apiService.CallApiAsync<EventResponseDTO>("Event/CreateEvent", HttpMethod.Post, newEvent);
+
+		}
+		catch (Exception ex)
+		{
+
+			Console.WriteLine($"An error occurred while creating the event: {ex.Message}");
+			throw;
+		}
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var endpoint = "Event/GetAllEvents";
+		evt = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
+	}
+}
