@@ -1,10 +1,10 @@
-﻿@page "/eventform"
+﻿@* @page "/eventform"
 
 @using EventSpaceUI.Client.Utilities
 @inject HttpClient HttpClient
-@inject IApiService _apiService
-@inject NavigationManager NavigationManager
-
+@inject IApiService _apiService 
+@inject NavigationManager NavigationManager *@
+@* 
 <div class="page-wrapper p-t-45 p-b-50">
 	<div class="wrapper wrapper--w790">
 		<div class="card card-5 mt-3">
@@ -52,6 +52,72 @@
 							<InputNumber class="input--style-5" @bind-Value="newEvent.TotalSeats" placeholder="Total Seats" />
 						</div>
 					</div>
+					<div class="">
+
+						<div class="form-row">
+							<div class="name">Tier Name</div>
+							<div class="value">
+								<InputText class="input--style-5" @bind-Value="newTier1.Name" placeholder="Tier Name" />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Tier Price</div>
+							<div class="value">
+								<InputNumber class="input--style-5" @bind-Value="newTier1.Price" placeholder="Price" />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Seats</div>
+							<div class="value">
+								<InputNumber class="input--style-5" @bind-Value="newTier1.TotalSeats" placeholder="Seats" />
+							</div>
+						</div>
+
+					</div>
+					<div class="mt-2">
+
+						<div class="form-row">
+							<div class="name">Tier Name</div>
+							<div class="value">
+								<InputText class="input--style-5" @bind-Value="newTier2.Name" placeholder="Tier Name" />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Tier Price</div>
+							<div class="value">
+								<InputNumber class="input--style-5" @bind-Value="newTier2.Price" placeholder="Price" />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Seats</div>
+							<div class="value">
+								<InputNumber class="input--style-5" @bind-Value="newTier2.TotalSeats" placeholder="Seats" />
+							</div>
+						</div>
+
+					</div>
+					<div class="mt-2">
+
+						<div class="form-row">
+							<div class="name">Tier Name</div>
+							<div class="value">
+								<InputText class="input--style-5" @bind-Value="newTier3.Name" placeholder="Tier Name" />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Tier Price</div>
+							<div class="value">
+								<InputNumber class="input--style-5" @bind-Value="newTier3.Price" placeholder="Price" />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Seats</div>
+							<div class="value">
+								<InputNumber class="input--style-5" @bind-Value="newTier3.TotalSeats" placeholder="Seats" />
+							</div>
+						</div>
+
+					</div>
 					<div>
 						<button class="btn btn--radius-2 btn--red" type="submit">Register</button>
 					</div>
@@ -59,32 +125,167 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> *@
+
+@page "/eventform"
+
+@using EventSpaceUI.Client.Utilities
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+@inject NavigationManager NavigationManager
+
+<div class="page-wrapper p-t-45 p-b-50 bg-dark">
+	<div class="wrapper wrapper-w790 mt-5">
+		<div class="card card-5 mt-3">
+			<div class="card-heading">
+				<h2 class="card-title text-light text-center">Event Registration Form</h2>
+			</div>
+			<div class="card-body">
+				<EditForm Model="@newEvent" OnValidSubmit="CreateEvent">
+					<DataAnnotationsValidator />
+					<ValidationSummary />
+
+					<!-- Event Details -->
+					<div class="form-row mb-55">
+						<div class="name">Event Name</div>
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newEvent.Name" placeholder="Event Name" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Venue</div>
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newEvent.Venue" placeholder="Venue" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Date</div>
+						<div class="value">
+							<InputDate class="input--style-5" @bind-Value="newEvent.Date" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Artist</div>
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newEvent.Artist" placeholder="Artist" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Starting Price</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newEvent.StartingPrice" placeholder="Starting Price" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="name">Total Seats</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newEvent.TotalSeats" placeholder="Total Seats" />
+						</div>
+					</div>
+
+					<!-- Tier Details -->
+					<div class="form-row">
+						<div class="name">Tier Name</div>
+						<div class="name">Tier Price</div>
+						<div class="name">Seats</div>
+					</div>
+
+					<!-- Tier 1 -->
+					<div class="form-row">
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newTier1.Name" placeholder="Tier Name" />
+						</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newTier1.Price" placeholder="Price" />
+						</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newTier1.TotalSeats" placeholder="Seats" />
+						</div>
+					</div>
+
+					<!-- Tier 2 -->
+					<div class="form-row">
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newTier2.Name" placeholder="Tier Name" />
+						</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newTier2.Price" placeholder="Price" />
+						</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newTier2.TotalSeats" placeholder="Seats" />
+						</div>
+					</div>
+
+					<!-- Tier 3 -->
+					<div class="form-row">
+						<div class="value">
+							<InputText class="input--style-5" @bind-Value="newTier3.Name" placeholder="Tier Name" />
+						</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newTier3.Price" placeholder="Price" />
+						</div>
+						<div class="value">
+							<InputNumber class="input--style-5" @bind-Value="newTier3.TotalSeats" placeholder="Seats" />
+						</div>
+					</div>
+
+					<!-- Submit Button -->
+					<div>
+						<button class="btn btn--radius-2 btn--red" type="submit">Register</button>
+					</div>
+				</EditForm>
+			</div>
+		</div>
+	</div>
+</div> 
+
 
 @code {
 
 	private List<EventResponseDTO> evt;
 	private EventResponseDTO newEvent = new EventResponseDTO();
+	private TierRequestDTO newTier1 = new TierRequestDTO();
+	private TierRequestDTO newTier2 = new TierRequestDTO();
+	private TierRequestDTO newTier3 = new TierRequestDTO();
+
+	private List<TierRequestDTO> newTierList = new List<TierRequestDTO>();
+
+
 
 	public class EventResponseDTO
 	{
 		public int Id { get; set; }
-		public string? Name { get; set; }
-		public string? Venue { get; set; }
+		public string Name { get; set; }
+		public string Venue { get; set; }
 		public DateTime Date { get; set; }
-		public string? Artist { get; set; }
+		public string Artist { get; set; }
 		public decimal StartingPrice { get; set; }
 		public int TotalSeats { get; set; }
+		public List<TierRequestDTO> TierList { get; set; } = new List<TierRequestDTO>();
 	}
+
+
+	public class TierRequestDTO
+	{
+		public string? Name { get; set; }
+		public int TotalSeats { get; set; }
+		public int Price { get; set; }
+
+	}
+
+
 
 	private async Task CreateEvent()
 	{
-
 		try
 		{
+			var newTierList = new List<TierRequestDTO> { newTier1, newTier2, newTier3 };
+			newEvent.TierList = newTierList;
+
+			// Send newEvent as payload
 			var createdEvent = await _apiService.CallApiAsync<EventResponseDTO>("Event/CreateEvent", HttpMethod.Post, newEvent);
-			Console.WriteLine("Event created successfully."); // Log success message
-																	// Redirect to eventindex page
+
+			Console.WriteLine("Event created successfully.");
 			NavigationManager.NavigateTo("/eventindex");
 		}
 		catch (Exception ex)
@@ -92,8 +293,6 @@
 			Console.WriteLine($"An error occurred while creating the event: {ex.Message}");
 			throw;
 		}
-
-
 	}
 
 	protected override async Task OnInitializedAsync()

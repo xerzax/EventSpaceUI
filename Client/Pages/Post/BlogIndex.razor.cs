@@ -68,32 +68,44 @@ namespace EventSpaceUI.Client.Pages.Post
                 formData.Add(new StringContent(newBlog.Content), "Content");
                 formData.Add(new StringContent(newBlog.PhotoName), "PhotoName");
 
-                if (newBlog.File != null)
-                {
-                    const long maxAllowedSize = 10 * 1024 * 1024;
+				if (newBlog.File != null)
+				{
+					const long maxAllowedSize = 10 * 1024 * 1024;
 
-                    var fileStream = new MemoryStream();
-                    await newBlog.File.OpenReadStream(maxAllowedSize).CopyToAsync(fileStream);
-                    fileStream.Seek(0, SeekOrigin.Begin);
+					if (newBlog.File.Size > maxAllowedSize)
+					{
+						throw new InvalidOperationException("File size exceeds the maximum allowed size.");
+					}
 
-                    using (fileStream)
-                    {
-                        var streamContent = new StreamContent(fileStream);
-                        streamContent.Headers.ContentType = new MediaTypeHeaderValue(newBlog.File.ContentType);
+					using (var fileStream = new MemoryStream())
+					{
+						try
+						{
+							await newBlog.File.OpenReadStream().CopyToAsync(fileStream);
+							fileStream.Seek(0, SeekOrigin.Begin);
 
-                        formData.Add(streamContent, "file", newBlog.File.Name);
-                    }
-                }
+							var streamContent = new StreamContent(fileStream);
+							streamContent.Headers.ContentType = new MediaTypeHeaderValue(newBlog.File.ContentType);
+
+							formData.Add(streamContent, "file", newBlog.File.Name);
+
+							blogs = await _apiService.CallApiAsyncForm<List<Blog>>(endpoint, HttpMethod.Post, formData);
+						}
+						catch (Exception ex)
+						{
+							throw new Exception("Error occurred while reading the file or copying content to stream.", ex);
+						}
+					}
+				}
 
 
-                // Call the API service to send the request
-                blogs = await _apiService.CallApiAsyncForm<List<Blog>>(endpoint, HttpMethod.Post, formData);
+
+
+				blogs = await _apiService.CallApiAsyncForm<List<Blog>>(endpoint, HttpMethod.Post, formData);
             }
             catch (Exception ex)
             {
-                // Handle any exceptions here, such as logging or displaying an error message
                 Console.WriteLine($"An error occurred while creating the blog: {ex.Message}");
-                // You might want to rethrow the exception here if you want to propagate it further
                 throw;
             }
         }

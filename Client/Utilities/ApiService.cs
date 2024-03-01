@@ -8,6 +8,10 @@ using Microsoft.JSInterop;
 using Blazored.SessionStorage;
 using System;
 using static EventSpaceUI.Client.Pages.Auth.Register;
+using System.Text;
+using System.Net.Http;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace EventSpaceUI.Client.Utilities
 {
@@ -41,9 +45,12 @@ namespace EventSpaceUI.Client.Utilities
             {
                 case "GET":
                     response = await _httpClient.GetAsync(fullUrl);
-                    break;
+					break;
                 case "POST":
-                    response = await _httpClient.PostAsJsonAsync(fullUrl, data);
+					//var jsonContent = JsonConvert.SerializeObject(data);
+
+					//response = await _httpClient.PostAsync(fullUrl,new StringContent(jsonContent, Encoding.UTF8, "application/json"));
+					response = await _httpClient.PostAsJsonAsync(fullUrl, data);
                     break;
                 case "PUT":
                     response = await _httpClient.PutAsJsonAsync(fullUrl, data);
@@ -101,7 +108,7 @@ namespace EventSpaceUI.Client.Utilities
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var loginResponse = JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var loginResponse = System.Text.Json.JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 if (!string.IsNullOrEmpty(loginResponse.Token))
                 {
