@@ -43,7 +43,7 @@
         color: #ccc;
     }
 
-.btn {
+.registerbtn {
     line-height: 50px;
     padding: 0 30px;
     border-radius: 5px;
@@ -57,7 +57,7 @@
     transition: background 0.3s ease;
 }
 
-    .btn:hover {
+    .registerbtn:hover {
         background: #eb3746;
     }
 

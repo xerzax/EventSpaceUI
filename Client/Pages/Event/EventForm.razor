@@ -1,256 +1,83 @@
-﻿@* @page "/eventform"
+﻿@page "/eventform"
 
 @using EventSpaceUI.Client.Utilities
-@inject HttpClient HttpClient
-@inject IApiService _apiService 
-@inject NavigationManager NavigationManager *@
-@* 
-<div class="page-wrapper p-t-45 p-b-50">
-	<div class="wrapper wrapper--w790">
-		<div class="card card-5 mt-3">
-			<div class="card-heading">
-				<h2 class="card-title text-light text-center">Event Registration Form</h2>
-			</div>
-			<div class="card-body">
-				<EditForm Model="@newEvent" OnValidSubmit="CreateEvent">
-					<DataAnnotationsValidator />
-					<ValidationSummary />
-
-					<div class="form-row m-b-55">
-						<div class="name">Event Name</div>
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newEvent.Name" placeholder="Event Name" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Venue</div>
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newEvent.Venue" placeholder="Venue" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Date</div>
-						<div class="value">
-							<InputDate class="input--style-5" @bind-Value="newEvent.Date" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Artist</div>
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newEvent.Artist" placeholder="Artist" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Starting Price</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newEvent.StartingPrice" placeholder="Starting Price" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Total Seats</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newEvent.TotalSeats" placeholder="Total Seats" />
-						</div>
-					</div>
-					<div class="">
-
-						<div class="form-row">
-							<div class="name">Tier Name</div>
-							<div class="value">
-								<InputText class="input--style-5" @bind-Value="newTier1.Name" placeholder="Tier Name" />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="name">Tier Price</div>
-							<div class="value">
-								<InputNumber class="input--style-5" @bind-Value="newTier1.Price" placeholder="Price" />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="name">Seats</div>
-							<div class="value">
-								<InputNumber class="input--style-5" @bind-Value="newTier1.TotalSeats" placeholder="Seats" />
-							</div>
-						</div>
-
-					</div>
-					<div class="mt-2">
-
-						<div class="form-row">
-							<div class="name">Tier Name</div>
-							<div class="value">
-								<InputText class="input--style-5" @bind-Value="newTier2.Name" placeholder="Tier Name" />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="name">Tier Price</div>
-							<div class="value">
-								<InputNumber class="input--style-5" @bind-Value="newTier2.Price" placeholder="Price" />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="name">Seats</div>
-							<div class="value">
-								<InputNumber class="input--style-5" @bind-Value="newTier2.TotalSeats" placeholder="Seats" />
-							</div>
-						</div>
-
-					</div>
-					<div class="mt-2">
-
-						<div class="form-row">
-							<div class="name">Tier Name</div>
-							<div class="value">
-								<InputText class="input--style-5" @bind-Value="newTier3.Name" placeholder="Tier Name" />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="name">Tier Price</div>
-							<div class="value">
-								<InputNumber class="input--style-5" @bind-Value="newTier3.Price" placeholder="Price" />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="name">Seats</div>
-							<div class="value">
-								<InputNumber class="input--style-5" @bind-Value="newTier3.TotalSeats" placeholder="Seats" />
-							</div>
-						</div>
-
-					</div>
-					<div>
-						<button class="btn btn--radius-2 btn--red" type="submit">Register</button>
-					</div>
-				</EditForm>
-			</div>
-		</div>
-	</div>
-</div> *@
-
-@page "/eventform"
-
-@using EventSpaceUI.Client.Utilities
+@using System.ComponentModel.DataAnnotations
 @inject HttpClient HttpClient
 @inject IApiService _apiService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
 
-<div class="page-wrapper p-t-45 p-b-50 bg-dark">
-	<div class="wrapper wrapper-w790 mt-5">
-		<div class="card card-5 mt-3">
-			<div class="card-heading">
-				<h2 class="card-title text-light text-center">Event Registration Form</h2>
-			</div>
-			<div class="card-body">
-				<EditForm Model="@newEvent" OnValidSubmit="CreateEvent">
-					<DataAnnotationsValidator />
-					<ValidationSummary />
 
-					<!-- Event Details -->
-					<div class="form-row mb-55">
-						<div class="name">Event Name</div>
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newEvent.Name" placeholder="Event Name" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Venue</div>
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newEvent.Venue" placeholder="Venue" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Date</div>
-						<div class="value">
-							<InputDate class="input--style-5" @bind-Value="newEvent.Date" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Artist</div>
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newEvent.Artist" placeholder="Artist" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Starting Price</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newEvent.StartingPrice" placeholder="Starting Price" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="name">Total Seats</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newEvent.TotalSeats" placeholder="Total Seats" />
-						</div>
-					</div>
+<div class="p-5 container-fluid mt-2">
 
-					<!-- Tier Details -->
-					<div class="form-row">
-						<div class="name">Tier Name</div>
-						<div class="name">Tier Price</div>
-						<div class="name">Seats</div>
+	<div class="card mt-3" style="max-width: 600px; margin: 0 auto;">
+		<div class="card-body">
+			<h2 class="card-title text-center mb-4 text-white">Event Registration Form</h2>
+			<form @onsubmit="CreateEvent">
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<label for="eventName" class="form-label text-white">Event Name</label>
+						<input type="text" class="form-control form-control-sm" id="eventName" @bind="newEvent.Name" required />
 					</div>
-
-					<!-- Tier 1 -->
-					<div class="form-row">
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newTier1.Name" placeholder="Tier Name" />
+					<div class="col-md-6">
+						<label for="eventVenue" class="form-label text-white">Venue</label>
+						<input type="text" class="form-control form-control-sm" id="eventVenue" @bind="newEvent.Venue" required>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<label for="eventDate" class="form-label text-white">Date</label>
+						<input type="date" class="form-control form-control-sm" id="eventDate" @bind="newEvent.Date" required>
+					</div>
+					<div class="col-md-6">
+						<label for="eventArtist" class="form-label text-white">Artist</label>
+						<input type="text" class="form-control form-control-sm" id="eventArtist" @bind="newEvent.Artist" required>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<label for="startingPrice" class="form-label text-white">Starting Price</label>
+						<input type="number" class="form-control form-control-sm" id="startingPrice" @bind="newEvent.StartingPrice" required>
+					</div>
+					<div class="col-md-6">
+						<label for="totalSeats" class="form-label text-white">Total Seats</label>
+						<input type="number" class="form-control form-control-sm" id="totalSeats" @bind="newEvent.TotalSeats" required>
+					</div>
+				</div>
+				<!-- Tier Details -->
+				<h4 class="mt-3 mb-2 text-center text-white">Tier Details</h4>
+				<div class="mb-3 d-flex justify-content-end">
+					<button type="button" class="btn btn-sm btn-outline-success" @onclick="AddTier">Add Tier</button>
+				</div>
+				@foreach (var tier in newEvent.TierList)
+				{
+					<div class="row mb-3">
+						<div class="col-md-4">
+							<label for="tierName" class="form-label text-white">Tier Name</label>
+							<input type="text" class="form-control form-control-sm" @bind="tier.Name" required>
 						</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newTier1.Price" placeholder="Price" />
+						<div class="col-md-4">
+							<label for="tierPrice" class="form-label text-white">Tier Price</label>
+							<input type="number" class="form-control form-control-sm" @bind="tier.Price" required>
 						</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newTier1.TotalSeats" placeholder="Seats" />
+						<div class="col-md-4">
+							<label for="tierSeats" class="form-label text-white">Seats</label>
+							<input type="number" class="form-control form-control-sm" @bind="tier.TotalSeats" required>
 						</div>
 					</div>
-
-					<!-- Tier 2 -->
-					<div class="form-row">
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newTier2.Name" placeholder="Tier Name" />
-						</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newTier2.Price" placeholder="Price" />
-						</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newTier2.TotalSeats" placeholder="Seats" />
-						</div>
-					</div>
-
-					<!-- Tier 3 -->
-					<div class="form-row">
-						<div class="value">
-							<InputText class="input--style-5" @bind-Value="newTier3.Name" placeholder="Tier Name" />
-						</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newTier3.Price" placeholder="Price" />
-						</div>
-						<div class="value">
-							<InputNumber class="input--style-5" @bind-Value="newTier3.TotalSeats" placeholder="Seats" />
-						</div>
-					</div>
-
-					<!-- Submit Button -->
-					<div>
-						<button class="btn btn--radius-2 btn--red" type="submit">Register</button>
-					</div>
-				</EditForm>
-			</div>
+				}
+				<div class="d-flex justify-content-center">
+					<button type="submit" class="registerbtn">Register</button>
+				</div>
+			</form>
 		</div>
 	</div>
-</div> 
+
+</div>
 
 
 @code {
-
-	private List<EventResponseDTO> evt;
 	private EventResponseDTO newEvent = new EventResponseDTO();
-	private TierRequestDTO newTier1 = new TierRequestDTO();
-	private TierRequestDTO newTier2 = new TierRequestDTO();
-	private TierRequestDTO newTier3 = new TierRequestDTO();
-
-	private List<TierRequestDTO> newTierList = new List<TierRequestDTO>();
-
-
 
 	public class EventResponseDTO
 	{
@@ -264,41 +91,344 @@
 		public List<TierRequestDTO> TierList { get; set; } = new List<TierRequestDTO>();
 	}
 
-
 	public class TierRequestDTO
 	{
 		public string? Name { get; set; }
 		public int TotalSeats { get; set; }
 		public int Price { get; set; }
-
 	}
 
-
+	private void AddTier()
+	{
+		newEvent.TierList.Add(new TierRequestDTO());
+	}
 
 	private async Task CreateEvent()
 	{
 		try
 		{
-			var newTierList = new List<TierRequestDTO> { newTier1, newTier2, newTier3 };
-			newEvent.TierList = newTierList;
-
 			// Send newEvent as payload
 			var createdEvent = await _apiService.CallApiAsync<EventResponseDTO>("Event/CreateEvent", HttpMethod.Post, newEvent);
-
 			Console.WriteLine("Event created successfully.");
+			await jsRuntime.InvokeVoidAsync("toastr.success", "Event created Successful!");
 			NavigationManager.NavigateTo("/eventindex");
 		}
 		catch (Exception ex)
 		{
 			Console.WriteLine($"An error occurred while creating the event: {ex.Message}");
+			await jsRuntime.InvokeVoidAsync("toastr.error", "Event Registration failed", "Invalid registration");
 			throw;
 		}
 	}
+} 
 
-	protected override async Task OnInitializedAsync()
-	{
-		var endpoint = "Event/GetAllEvents";
-		evt = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
-	}
+
+@* @page "/eventform"
+
+@using EventSpaceUI.Client.Utilities
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
+
+<div class="p-5 container-fluid mt-2">
+
+    <div class="card mt-3" style="max-width: 600px; margin: 0 auto;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4 text-white">Event Registration Form</h2>
+            <form @onsubmit="CreateEvent">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="eventName" class="form-label text-white">Event Name</label>
+                        <input type="text" class="form-control form-control-sm" id="eventName" @bind="newEvent.Name" required />
+                        <ValidationMessage For="@(() => newEvent.Name)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="eventVenue" class="form-label text-white">Venue</label>
+                        <input type="text" class="form-control form-control-sm" id="eventVenue" @bind="newEvent.Venue" required>
+                        <ValidationMessage For="@(() => newEvent.Venue)" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="eventDate" class="form-label text-white">Date</label>
+                        <input type="date" class="form-control form-control-sm" id="eventDate" @bind="newEvent.Date" required>
+                        <ValidationMessage For="@(() => newEvent.Date)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="eventArtist" class="form-label text-white">Artist</label>
+                        <input type="text" class="form-control form-control-sm" id="eventArtist" @bind="newEvent.Artist" required>
+                        <ValidationMessage For="@(() => newEvent.Artist)" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="startingPrice" class="form-label text-white">Starting Price</label>
+                        <input type="number" class="form-control form-control-sm" id="startingPrice" @bind="newEvent.StartingPrice" required>
+                        <ValidationMessage For="@(() => newEvent.StartingPrice)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="totalSeats" class="form-label text-white">Total Seats</label>
+                        <input type="number" class="form-control form-control-sm" id="totalSeats" @bind="newEvent.TotalSeats" required>
+                        <ValidationMessage For="@(() => newEvent.TotalSeats)" />
+                    </div>
+                </div>
+                <!-- Tier Details -->
+                <h4 class="mt-3 mb-2 text-center text-white">Tier Details</h4>
+                <div class="mb-3 d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-outline-success" @onclick="AddTier">Add Tier</button>
+                </div>
+                @foreach (var tier in newEvent.TierList)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="tierName" class="form-label text-white">Tier Name</label>
+                            <input type="text" class="form-control form-control-sm" @bind="tier.Name" required>
+                            <ValidationMessage For="@(() => tier.Name)" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tierPrice" class="form-label text-white">Tier Price</label>
+                            <input type="number" class="form-control form-control-sm" @bind="tier.Price" required>
+                            <ValidationMessage For="@(() => tier.Price)" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tierSeats" class="form-label text-white">Seats</label>
+                            <input type="number" class="form-control form-control-sm" @bind="tier.TotalSeats" required>
+                            <ValidationMessage For="@(() => tier.TotalSeats)" />
+                        </div>
+                    </div>
+                }
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="registerbtn">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    private EventResponseDTO newEvent = new EventResponseDTO();
+
+    public class EventResponseDTO
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Event Name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Venue is required")]
+        public string Venue { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Date is required")]
+        public DateTime Date { get; set; }
+
+        [Required(ErrorMessage = "Artist is required")]
+        public string Artist { get; set; }
+
+        [Required(ErrorMessage = "Starting Price is required")]
+        [Range(0, double.MaxValue, ErrorMessage = "Starting Price must be a positive number")]
+        public decimal StartingPrice { get; set; }
+
+        [Required(ErrorMessage = "Total Seats is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Total Seats must be at least 1")]
+        public int TotalSeats { get; set; }
+
+        public List<TierRequestDTO> TierList { get; set; } = new List<TierRequestDTO>();
+    }
+
+    public class TierRequestDTO
+    {
+        [Required(ErrorMessage = "Tier Name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Tier Price is required")]
+        [Range(0, int.MaxValue, ErrorMessage = "Tier Price must be a positive number")]
+        public int Price { get; set; }
+
+        [Required(ErrorMessage = "Tier Seats is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Tier Seats must be at least 1")]
+        public int TotalSeats { get; set; }
+    }
+
+    private void AddTier()
+    {
+        newEvent.TierList.Add(new TierRequestDTO());
+    }
+
+    private async Task CreateEvent()
+    {
+        try
+        {
+            // Send newEvent as payload
+            var createdEvent = await _apiService.CallApiAsync<EventResponseDTO>("Event/CreateEvent", HttpMethod.Post, newEvent);
+            Console.WriteLine("Event created successfully.");
+            await jsRuntime.InvokeVoidAsync("toastr.success", "Event created Successful!");
+            NavigationManager.NavigateTo("/eventindex");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while creating the event: {ex.Message}");
+            await jsRuntime.InvokeVoidAsync("toastr.error", "Event Registration failed", "Invalid registration");
+            throw;
+        }
+    }
+} *@
+
+@* @page "/eventform"
+
+@using EventSpaceUI.Client.Utilities
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
+
+<div class="p-5 container-fluid mt-2">
+    <div class="card mt-3" style="max-width: 600px; margin: 0 auto;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4 text-white">Event Registration Form</h2>
+            <EditForm Model="@newEvent" OnSubmit="CreateEvent">
+                <ValidationSummary />
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="eventName" class="form-label text-white">Event Name</label>
+                        <InputText class="form-control form-control-sm" id="eventName" @bind-Value="newEvent.Name" />
+                        <ValidationMessage For="@(() => newEvent.Name)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="eventVenue" class="form-label text-white">Venue</label>
+                        <InputText class="form-control form-control-sm" id="eventVenue" @bind-Value="newEvent.Venue" />
+                        <ValidationMessage For="@(() => newEvent.Venue)" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="eventDate" class="form-label text-white">Date</label>
+                        <InputDate class="form-control form-control-sm" id="eventDate" @bind-Value="newEvent.Date" />
+                        <ValidationMessage For="@(() => newEvent.Date)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="eventVenue" class="form-label text-white">Artist</label>
+                        <InputText class="form-control form-control-sm" id="eventArtist" @bind-Value="newEvent.Artist" />
+                        <ValidationMessage For="@(() => newEvent.Artist)" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="startingPrice" class="form-label text-white">Starting Price</label>
+                        <InputNumber class="form-control form-control-sm" id="startingPrice" @bind-Value="newEvent.StartingPrice" />
+                        <ValidationMessage For="@(() => newEvent.StartingPrice)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="totalSeats" class="form-label text-white">Total Seats</label>
+                        <InputNumber class="form-control form-control-sm" id="totalSeats" @bind-Value="newEvent.TotalSeats" />
+                        <ValidationMessage For="@(() => newEvent.TotalSeats)" />
+                    </div>
+                </div>
+                <!-- Tier Details -->
+                <h4 class="mt-3 mb-2 text-center text-white">Tier Details</h4>
+                <div class="mb-3 d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-outline-success" @onclick="AddTier">Add Tier</button>
+                </div>
+                @foreach (var tier in newEvent.TierList)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="tierName" class="form-label text-white">Tier Name</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="tier.Name" />
+                            <ValidationMessage For="@(() => tier.Name)" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tierPrice" class="form-label text-white">Tier Price</label>
+                            <InputNumber class="form-control form-control-sm" @bind-Value="tier.Price" />
+                            <ValidationMessage For="@(() => tier.Price)" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tierSeats" class="form-label text-white">Seats</label>
+                            <InputNumber class="form-control form-control-sm" @bind-Value="tier.TotalSeats" />
+                            <ValidationMessage For="@(() => tier.TotalSeats)" />
+                        </div>
+                    </div>
+                }
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="registerbtn">Register</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private EventResponseDTO newEvent = new EventResponseDTO();
+
+    public class EventResponseDTO
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Event Name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Venue is required")]
+        public string Venue { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Date is required")]
+        public DateTime Date { get; set; }
+
+        [Required(ErrorMessage = "Artist is required")]
+        public string Artist { get; set; }
+
+        [Required(ErrorMessage = "Starting Price is required")]
+        [Range(0, double.MaxValue, ErrorMessage = "Starting Price must be a positive number")]
+        public decimal StartingPrice { get; set; }
+
+        [Required(ErrorMessage = "Total Seats is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Total Seats must be at least 1")]
+        public int TotalSeats { get; set; }
+
+        public List<TierRequestDTO> TierList { get; set; } = new List<TierRequestDTO>();
+    }
+
+    public class TierRequestDTO
+    {
+        [Required(ErrorMessage = "Tier Name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Tier Price is required")]
+        [Range(0, int.MaxValue, ErrorMessage = "Tier Price must be a positive number")]
+        public int Price { get; set; }
+
+        [Required(ErrorMessage = "Tier Seats is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Tier Seats must be at least 1")]
+        public int TotalSeats { get; set; }
+    }
+
+    private void AddTier()
+    {
+        newEvent.TierList.Add(new TierRequestDTO());
+    }
+
+    private async Task CreateEvent()
+    {
+        try
+        {
+            // Send newEvent as payload
+            var createdEvent = await _apiService.CallApiAsync<EventResponseDTO>("Event/CreateEvent", HttpMethod.Post, newEvent);
+            Console.WriteLine("Event created successfully.");
+            await jsRuntime.InvokeVoidAsync("toastr.success", "Event created Successful!");
+            NavigationManager.NavigateTo("/eventindex");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while creating the event: {ex.Message}");
+            await jsRuntime.InvokeVoidAsync("toastr.error", "Event Registration failed", "Invalid registration");
+            throw;
+        }
+    }
 }
-
+ *@

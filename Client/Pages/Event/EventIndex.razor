@@ -32,5 +32,6 @@
     {
         var endpoint = "Event/GetAllEvents";
         Events = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
+
     }
 }

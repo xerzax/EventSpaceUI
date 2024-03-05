@@ -2,6 +2,7 @@
 @using EventSpaceUI.Client.Utilities
 @inject HttpClient HttpClient
 @inject IApiService _apiService
+@inject IJSRuntime jsRuntime
 
 
 <div class="container-fluid p-0">
@@ -89,12 +90,14 @@
         {
             // Login successful
             loginResultMessage = response;
+            await jsRuntime.InvokeVoidAsync("toastr.success", "Login Successful!");
             // Retrieve the token from the service
         }
         else
         {
             // Login failed
             loginResultMessage = response;
+            await jsRuntime.InvokeVoidAsync("toastr.error", "Login Failed", "Invalid Login");
         }
     }
 }

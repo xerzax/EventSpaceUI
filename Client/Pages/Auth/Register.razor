@@ -1,6 +1,7 @@
 ﻿@page "/register"
 @using EventSpaceUI.Client.Utilities
 @inject IApiService _apiService
+@inject IJSRuntime jsRuntime
 
 <div class="container-fluid p-0">
     <div class="row justify-content-center align-items-center min-vh-100">
@@ -72,10 +73,12 @@
         if (response == "Registration successful")
         {
             registerResultMessage = response;
+            await jsRuntime.InvokeVoidAsync("toastr.success", "Registration successful");
         }
         else
         {
             registerResultMessage = response;
+            await jsRuntime.InvokeVoidAsync("toastr.error", "Registration failed", "Invalid registration");
         }
     }
 }

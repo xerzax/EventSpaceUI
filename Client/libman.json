@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [{
+  "provider": "cdnjs",
+  "library": "jquery@3.7.1",
+  "destination": "wwwroot/jquery/",
+  "files": [
+    "jquery.min.js"
+  ]
+}
+,
+{
+  "provider": "cdnjs",
+  "library": "toastr.js@2.1.4",
+  "destination": "wwwroot/toastr.js/",
+  "files": [
+    "toastr.min.js",
+    "toastr.min.css"
+  ]
+}
+,
+{
+  "provider": "unpkg",
+  "library": "sweetalert2@11.10.5",
+  "destination": "wwwroot/sweetalert2/",
+  "files": [
+    "dist/sweetalert2.min.js",
+    "dist/sweetalert2.min.css"
+  ]
+}
+]
+}
