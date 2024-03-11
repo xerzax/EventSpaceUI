@@ -3,6 +3,7 @@
 @inject HttpClient HttpClient
 @inject IApiService _apiService
 @inject IJSRuntime jsRuntime
+@inject NavigationManager navManager
 
 
 <div class="container-fluid p-0">
@@ -90,6 +91,7 @@
         {
             // Login successful
             loginResultMessage = response;
+            navManager.NavigateTo("/eventindex");
             await jsRuntime.InvokeVoidAsync("toastr.success", "Login Successful!");
             // Retrieve the token from the service
         }

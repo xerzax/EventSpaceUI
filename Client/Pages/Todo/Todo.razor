@@ -1,0 +1,185 @@
+﻿@* @page "/todo"
+@using EventSpaceUI.Client.Utilities
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
+
+<div class="container-fluid p-0">
+	<div class="row justify-content-center align-items-center min-vh-100">
+		<h2 class="mb-4">TODO List</h2>
+
+		<!-- Todo List -->
+		<ul class="list-group mb-4">
+			@if (todos != null)
+			{
+				@foreach (var todo in todos)
+				{
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						<span>@todo.TaskName</span>
+						<span class="badge bg-primary rounded-pill">@todo.DueDate.ToShortDateString()</span>
+					</li>
+				}
+			}
+		</ul>
+
+		<!-- Add New Todo Form -->
+		<form @onsubmit="CreateTodo" class="mb-4">
+			<div class="row">
+				<div class="col-8">
+					<input type="text" class="form-control" placeholder="Enter Task" @bind="newTodo.TaskName" required />
+				</div>
+				<div class="col-3">
+					<input type="date" class="form-control" @bind="newTodo.DueDate" required />
+				</div>
+				<div class="col-1">
+					<button type="submit" class="btn btn-primary">Add</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+@code {
+	private List<TodoDTO> todos;
+	private TodoDTO newTodo = new TodoDTO();
+
+	public class TodoDTO
+	{
+		public int Id { get; set; }
+		public string TaskName { get; set; }
+		public DateTime DueDate { get; set; }
+		public bool IsCompleted { get; set; } = false;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var endpoint = "Todo/GetTodos";
+		todos = await _apiService.CallApiAsync<List<TodoDTO>>(endpoint, HttpMethod.Get);
+	}
+
+	private async Task CreateTodo()
+	{
+		try
+		{
+			var createdTodo = await _apiService.CallApiAsync<TodoDTO>("Todo/PostTodos", HttpMethod.Post, newTodo);
+			if (createdTodo != null)
+			{
+				Console.WriteLine("Todo created successfully.");
+				await jsRuntime.InvokeVoidAsync("toastr.success", "Task created successfully!");
+				// Refresh the todo list
+				if (todos == null)
+					todos = new List<TodoDTO>();
+				todos.Add(createdTodo);
+				newTodo = new TodoDTO();
+			}
+			else
+			{
+				Console.WriteLine("Failed to create todo.");
+				await jsRuntime.InvokeVoidAsync("toastr.error", "Task creation failed");
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"An error occurred while creating the todo: {ex.Message}");
+			await jsRuntime.InvokeVoidAsync("toastr.error", "Task creation failed");
+		}
+	}
+}
+
+ *@
+
+@page "/todo"
+@using EventSpaceUI.Client.Utilities
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
+
+<div class="p-5 container-fluid">
+	<div class="row justify-content-center align-items-center min-vh-100">
+		<div class=" container">
+			<h2 class="mb-4 text-white">Todo List</h2>
+
+			<!-- Todo List -->
+			<ul class="list-group mb-4">
+				@if (todos != null && todos.Any())
+				{
+					@foreach (var todo in todos)
+					{
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							<span>@todo.TaskName</span>
+							<span class="badge bg-primary rounded-pill">@todo.DueDate.ToShortDateString()</span>
+						</li>
+					}
+				}
+				else
+				{
+					<li class="list-group-item">No tasks found.</li>
+				}
+			</ul>
+
+			<!-- Add New Todo Form -->
+			<form @onsubmit="CreateTodo" class="mb-4">
+				<div class="row">
+					<div class="col-8">
+						<input type="text" class="form-control" placeholder="Enter Task" @bind="newTodo.TaskName" required />
+					</div>
+					<div class="col-3">
+						<input type="date" class="form-control" @bind="newTodo.DueDate" required />
+					</div>
+					<div class="col-1">
+						<button type="submit" class="btn btn-primary">Add</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+@code {
+	private List<TodoDTO> todos;
+	private TodoDTO newTodo = new TodoDTO();
+
+	public class TodoDTO
+	{
+		public int Id { get; set; }
+		public string TaskName { get; set; }
+		public DateTime DueDate { get; set; }
+		public bool IsCompleted { get; set; } = false;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var endpoint = "Todo/GetTodos";
+		todos = await _apiService.CallApiAsync<List<TodoDTO>>(endpoint, HttpMethod.Get);
+	}
+
+	private async Task CreateTodo()
+	{
+		try
+		{
+			var createdTodo = await _apiService.CallApiAsync<TodoDTO>("Todo/PostTodos", HttpMethod.Post, newTodo);
+			if (createdTodo != null)
+			{
+				Console.WriteLine("Todo created successfully.");
+				await jsRuntime.InvokeVoidAsync("toastr.success", "Task created successfully!");
+				// Refresh the todo list
+				if (todos == null)
+					todos = new List<TodoDTO>();
+				todos.Add(createdTodo);
+				newTodo = new TodoDTO();
+			}
+			else
+			{
+				Console.WriteLine("Failed to create todo.");
+				await jsRuntime.InvokeVoidAsync("toastr.error", "Task creation failed");
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"An error occurred while creating the todo: {ex.Message}");
+			await jsRuntime.InvokeVoidAsync("toastr.error", "Task creation failed");
+		}
+	}
+}
