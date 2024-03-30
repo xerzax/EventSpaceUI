@@ -1,0 +1,35 @@
+﻿.fs--heading-xl {
+    font-size: 3.2rem;
+    line-height: 2.9rem;
+}
+
+.fs--heading-1 {
+    font-size: 2.4rem;
+    line-height: 2.9rem;
+}
+
+.fs--heading-2 {
+    font-size: 1.8rem;
+    line-height: 2.1rem;
+}
+
+
+.fs--normal {
+    font-size: 1.6rem;
+    line-height: 2rem;
+}
+
+.fs--medium {
+    font-size: 1.4rem !important;
+    line-height: 1.7rem !important;
+}
+
+.fs--small {
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+}
+
+.fs--xsmall {
+    font-size: 1rem;
+    line-height: 1.1rem;
+}

@@ -64,7 +64,7 @@
 	}
 }  *@
 
-	@* @page "/ticket"
+@* @page "/ticket"
 
 @using EventSpaceUI.Client.Utilities
 @inject HttpClient HttpClient
@@ -131,8 +131,8 @@
     }
 }
  *@
-
-         @page "/ticket"
+@*
+@page "/ticket"
 
 @using EventSpaceUI.Client.Utilities
 @inject HttpClient HttpClient
@@ -141,57 +141,163 @@
 @inject IJSRuntime jsRuntime
 
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 mt-4 p-5">
-            <div class="card">
-                <div class="card-header bg-danger text-white">
-                    <h2 class="card-title text-center mb-0">Ticket Purchase Form</h2>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <form @onsubmit="PurchaseTicket">
-                                <div class="mb-3">
-                                    <label for="eventId" class="form-label text-white">Event ID</label>
-                                    <input type="number" class="form-control" id="eventId" @bind="newTicket.EventID" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Quantity" class="form-label text-white">Ticket Quantity</label>
-                                    <input type="number" class="form-control" id="Quantity" @bind="newTicket.Qty" required />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="TierName" class="form-label text-white">Tier Name</label>
-                                    <input type="text" class="form-control" id="TierName" @bind="newTicket.TierName" required>
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-danger">Purchase</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-md-6 d-flex align-items-stretch border-start border-1">
-                            <img src="/images/eventlogo.png" class="img-fluid w-100 h-100" alt="Responsive Image">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row justify-content-center">
+		<div class="col-md-8 mt-4 p-5">
+			<div class="card">
+				<div class="card-header bg-danger text-white">
+					<h2 class="card-title text-center mb-0">Ticket Purchase Form</h2>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<form @onsubmit="PurchaseTicket">
+								<div class="mb-3">
+									<label for="eventId" class="form-label text-white">Event ID</label>
+									<input type="number" class="form-control" id="eventId" @bind="newTicket.EventID" required>
+								</div>
+								<div class="mb-3">
+									<label for="Quantity" class="form-label text-white">Ticket Quantity</label>
+									<input type="number" class="form-control" id="Quantity" @bind="newTicket.Qty" required />
+								</div>
+								<div class="mb-3">
+									<label for="TierName" class="form-label text-white">Tier Name</label>
+									<input type="text" class="form-control" id="TierName" @bind="newTicket.TierName" required>
+								</div>
+								<div class="text-center">
+									<button type="submit" class="btn btn-danger">Purchase</button>
+								</div>
+							</form>
+						</div>
+						<div class="col-md-6 d-flex align-items-stretch border-start border-1">
+							<img src="/images/eventlogo.png" class="img-fluid w-100 h-100" alt="Responsive Image">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @code {
-    private TicketModel newTicket = new TicketModel();
+	private TicketModel newTicket = new TicketModel();
 
-    public class TicketModel
+	public class TicketModel
+	{
+		public int Qty { get; set; }
+		public string TierName { get; set; }
+		public int EventID { get; set; }
+	}
+	private async Task PurchaseTicket()
+	{
+		try
+		{
+			var createdEvent = await _apiService.CallApiAsync<TicketModel>("Ticket/buy-tickets", HttpMethod.Post, newTicket);
+			Console.WriteLine("Ticket purchased successfully.");
+			await jsRuntime.InvokeVoidAsync("toastr.success", "Tickets purchase successful!");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"An error occurred while creating the event: {ex.Message}");
+			await jsRuntime.InvokeVoidAsync("toastr.error", "Ticket purchase failed");
+			throw;
+		}
+	}
+} *@
+
+@page "/ticket"
+@using EventSpaceUI.Client.Utilities
+@using static EventSpaceUI.Client.Pages.Event.EventForm
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
+
+
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="col-md-8 mt-4 p-5">
+			<div class="card">
+				<div class="card-header bg-danger text-white">
+					<h2 class="card-title text-center mb-0">Ticket Purchase Form</h2>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<form @onsubmit="PurchaseTicket">
+								<div class="mb-3">
+									<label for="eventName" class="form-label text-white">Event Name</label>
+									<input type="text" class="form-control" id="eventName" value="@SelectedEvent?.Name" readonly />
+								</div>
+								<div class="mb-3">
+									<label for="Quantity" class="form-label text-white">Ticket Quantity</label>
+									<input type="number" class="form-control" id="Quantity" @bind="newTicket.Qty" required />
+								</div>
+								<div class="mb-3">
+									<label for="TierName" class="form-label text-white">Tier</label>
+									<select class="form-control" id="TierName" @bind="newTicket.TierName" required>
+										<option value="">Select Tier</option>
+										@if (SelectedEvent != null)
+										{
+											@foreach (var tier in SelectedEvent.TierList)
+											{
+												<option value="@tier.Name">@tier.Name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="text-center">
+									<button type="submit" class="btn btn-danger">Purchase</button>
+								</div>
+							</form>
+						</div>
+						<div class="col-md-6 d-flex align-items-stretch border-start border-1">
+							@if (SelectedEvent != null)
+							{
+								<div class="card w-100">
+									<img src="/images/eventlogo.png" class="card-img-top" alt="Event Logo">
+								</div>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@code {
+    private TicketModel newTicket = new TicketModel();
+    private EventResponseDTO SelectedEvent;
+    private List<EventResponseDTO> Events;
+
+    protected override async Task OnInitializedAsync()
     {
-        public int Qty { get; set; }
-        public string TierName { get; set; }
-        public int EventID { get; set; }
+        var endpoint = "Event/GetAllEvents";
+        Events = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
+
+        // Automatically select the first event if available
+        if (Events.Any())
+        {
+            newTicket.EventID = Events.First().Id;
+            await LoadEventDetails();
+        }
+    }
+
+    private async Task LoadEventDetails()
+    {
+        if (newTicket.EventID != 0)
+        {
+            SelectedEvent = Events.FirstOrDefault(e => e.Id == newTicket.EventID);
+        }
     }
 
     private async Task PurchaseTicket()
     {
         try
         {
+            await LoadEventDetails();
+
             var createdEvent = await _apiService.CallApiAsync<TicketModel>("Ticket/buy-tickets", HttpMethod.Post, newTicket);
             Console.WriteLine("Ticket purchased successfully.");
             await jsRuntime.InvokeVoidAsync("toastr.success", "Tickets purchase successful!");
@@ -203,4 +309,15 @@
             throw;
         }
     }
+
+    public class TicketModel
+    {
+        public int Qty { get; set; }
+        public string TierName { get; set; }
+        public int EventID { get; set; }
+    }
 }
+ 
+
+
+

@@ -40,6 +40,9 @@
                                 <div class="input-group mb-3">
                                     <button type="submit" class="btn btn-lg btn-danger w-100 fs-6">Register</button>
                                 </div>
+                                <div class="row">
+                                    <small class="text-white-50">Already have an account? <a href="/login" class="text-info">Login</a></small>
+                                </div>
                                 @if (!string.IsNullOrEmpty(registerResultMessage))
                                 {
                                     <p class="text-center mt-3 text-white">@registerResultMessage</p>

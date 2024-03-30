@@ -23,7 +23,6 @@
     }
 
 .nav-link:hover {
-    color: #ffc107; /* Change the color to your desired hover color */
     text-decoration: underline; /* Underline on hover, adjust as needed */
 }
 
@@ -42,14 +41,14 @@
         color: white;
 
     }
-.login:hover{
-        background-color: whitesmoke;
-        color: black;
-    }
-.signup{
-    color: black;
-    background-color: whitesmoke;
-
+        .login:hover {
+            background-color: #8c0b0b;
+            color: white;
+            border: 1px solid #8c0b0b;
+        }
+.signup {
+    color: white;
+    background-color: #8c0b0b;
 }
     .signup:hover {
         color: white;

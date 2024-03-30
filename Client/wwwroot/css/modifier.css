@@ -1,0 +1,194 @@
+﻿.bg--primary {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.bg--secondary {
+    background-color: #BA1D37 !important;
+}
+
+.text-primary {
+    color: white !important;
+}
+
+.t-secondary {
+    color: #8c0b0b !important;
+}
+.divider-evt {
+    border-left: 1px solid #BA1D37;
+    height: 100%;
+    margin-left: 3rem;
+}
+
+/*.nav-link.active {
+    background-color: var(--colorPrimarys1) !important;
+    color: white;
+}
+
+
+.nav-text-primary {
+    color: var(--colorPrimarys1) !important;
+    padding-bottom: 3rem;
+}
+
+    .nav-text-primary:hover {
+        font-size: 1.8rem;
+    }
+
+.border-gray {
+    border: 1px solid #272727;
+}
+
+.border-red {
+    border: 1px solid var(--colorSecondarys1) !important;
+    background-color: var(--colorPrimarys1) !important;
+}
+
+.eventVerse {
+    cursor: pointer;
+}
+
+.border-round {
+    border-radius: 50%;
+}
+
+.border-curved {
+    border-radius: 0.8rem;
+}
+
+.profile-picture {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.img-xs {
+    height: 40px !important;
+    width: 40px;
+    object-fit: cover;
+}
+
+.merch-card {
+    background-color: var(--colorSecondarys2);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.merch-card-sm {
+    background-color: var(--colorSecondarys2);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+    .merch-card-sm img {
+        width: 100%;
+        object-fit: cover;
+        height: 25rem;
+    }
+
+.merch-card img {
+    width: 100%;
+    object-fit: cover;
+    height: 25rem;
+}
+
+.dark-box {
+    background-color: #333333;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);*/ /* Elevation shadow */
+    /*padding: 2rem;
+    border-radius: 1rem;
+    color: #FFFFFF;
+}
+
+.dark-table {
+    background-color: #333333;
+    color: black;
+    border-collapse: collapse;
+}
+
+    .dark-table th,
+    .dark-table td {
+        border: 1px solid black;
+        padding: 1rem;
+    }
+
+    .dark-table th {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .dark-table tr:nth-child(even) {
+        background-color: #444444;
+    }
+
+.responsive-custom {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.dropdown-menu-custom .dropdown-item {
+    color: black !important;
+    font-size: 1.4rem !important;
+    padding: 0.5rem !important;
+}
+
+.toast-message {
+    font-size: 1.6rem !important;
+}
+
+.button-container {
+    width: 20rem;
+}
+
+
+.box4 {
+    background-color: #FF6384;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);*/ /* Elevation shadow */
+    /*padding: 2rem;
+    border-radius: 1rem;
+    color: #FFFFFF;
+}
+
+.custom-box {
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);*/ /* Elevation shadow */
+    /*padding: 2rem;
+    border-radius: 1rem;
+}
+
+.nav-tabs-custom .nav-item-custom.show .nav-link-custom, .nav-tabs-custom .nav-link-custom.active {
+    border-color: red darkred darkred !important;
+    color: white !important;
+}
+
+.nav-tabs-custom {
+    border-bottom: 1px solid darkred !important;
+}
+
+.nav-link-custom {
+    color: white !important;
+}
+
+.padding-btm {
+    padding-bottom: 8rem !important;
+}*/
+
+/* Change toolbar background color */
+/*.ck.ck-toolbar {
+    background-color: var(--colorSecondarys1);
+}*/
+
+/* Change toolbar button color */
+/*.ck.ck-button {
+    color: var(--colorPrimarys1);
+}*/

@@ -23,8 +23,4 @@
 	  <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
 	  <None Include="wwwroot\css\open-iconic\README.md" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="wwwroot\js\" />
-	</ItemGroup>
 </Project>
