@@ -27,7 +27,7 @@
     cursor: pointer;
     padding: 1rem;
     border-radius: 0.5rem;
-    border: 1px solid #272727;
+    border: 1px solid black;
 }
 
     .event-list:hover {

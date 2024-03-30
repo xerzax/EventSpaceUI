@@ -12,6 +12,8 @@ using System.Text;
 using System.Net.Http;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EventSpaceUI.Client.Utilities
 {
@@ -22,16 +24,23 @@ namespace EventSpaceUI.Client.Utilities
         private readonly string _baseUrl = "https://localhost:7060/api";
         private readonly IJSRuntime _jsRuntime;
         private readonly ISessionStorageService _sessionStorageService;
+        private readonly ILocalStorageService _localStorageService;
+		private readonly AuthenticationStateProvider _authStateProvider;
 
 
-        public ApiService(HttpClient httpClient, IJSRuntime jsRuntime, ISessionStorageService sessionStorageService)
-        {
-            _httpClient = httpClient;
-            _jsRuntime = jsRuntime;
-            _sessionStorageService = sessionStorageService;
-        }
 
-        public async Task<T> CallApiAsync<T>(string url, HttpMethod method, object data = null)
+
+
+		public ApiService(HttpClient httpClient, IJSRuntime jsRuntime, ISessionStorageService sessionStorageService, ILocalStorageService localStorageService, AuthenticationStateProvider authStateProvider)
+		{
+			_httpClient = httpClient;
+			_jsRuntime = jsRuntime;
+			_sessionStorageService = sessionStorageService;
+			this._localStorageService = localStorageService;
+			_authStateProvider = authStateProvider;
+		}
+
+		public async Task<T> CallApiAsync<T>(string url, HttpMethod method, object data = null)
         {
             var token = await _sessionStorageService.GetItemAsync<string>("JWT_TOKEN");
             if (!string.IsNullOrEmpty(token))
@@ -94,38 +103,65 @@ namespace EventSpaceUI.Client.Utilities
             }
         }
 
-        public async Task<string> Login(LoginModel loginModel)
-        {
-            var url = "Account/Login";
-            string fullUrl = $"{_baseUrl}/{url}";
+		//public async Task<string> Login(LoginModel loginModel)
+		//{
+		//    var url = "Account/Login";
+		//    string fullUrl = $"{_baseUrl}/{url}";
 
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(fullUrl, loginModel);
-            //var loginJson = JsonSerializer.Serialize(loginModel);
-            //var loginContent = new StringContent(loginJson, System.Text.Encoding.UTF8, "application/json");
+		//    HttpResponseMessage response = await _httpClient.PostAsJsonAsync(fullUrl, loginModel);
+		//    //var loginJson = JsonSerializer.Serialize(loginModel);
+		//    //var loginContent = new StringContent(loginJson, System.Text.Encoding.UTF8, "application/json");
 
-            //var response = await _httpClient.PostAsync("Account/login", loginContent);
+		//    //var response = await _httpClient.PostAsync("Account/login", loginContent);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var loginResponse = System.Text.Json.JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+		//    if (response.IsSuccessStatusCode)
+		//    {
+		//        var responseContent = await response.Content.ReadAsStringAsync();
+		//        var loginResponse = System.Text.Json.JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (!string.IsNullOrEmpty(loginResponse.Token))
-                {
-                    // Store token in local storage
-                    //await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", loginResponse.Token);
-                    await _sessionStorageService.SetItemAsync("JWT_TOKEN", loginResponse.Token);
-                    // Attach token to headers of HttpClient
-                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Token);
+		//        if (!string.IsNullOrEmpty(loginResponse.Token))
+		//        {
+		//            // Store token in local storage
+		//            //await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", loginResponse.Token);
+		//            await _sessionStorageService.SetItemAsync("JWT_TOKEN", loginResponse.Token);
+		//            // Attach token to headers of HttpClient
+		//            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Token);
 
-                    return "Login successful";
-                }
-            }
+		//            return "Login successful";
+		//        }
+		//    }
 
-            return "Invalid email or password.";
-        }
-         
-        public async Task<string> Register(RegisterModel registerModel)
+		//    return "Invalid email or password.";
+		//}
+
+		public async Task<string> Login(LoginModel loginModel)
+		{
+			var url = "Account/Login";
+			string fullUrl = $"{_baseUrl}/{url}";
+
+			HttpResponseMessage response = await _httpClient.PostAsJsonAsync(fullUrl, loginModel);
+
+
+			if (response.IsSuccessStatusCode)
+			{
+				var responseContent = await response.Content.ReadAsStringAsync();
+				var loginResponse = System.Text.Json.JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+				if (!string.IsNullOrEmpty(loginResponse.Token))
+				{
+					await _sessionStorageService.SetItemAsync("JWT_TOKEN", loginResponse.Token);
+					await _authStateProvider.GetAuthenticationStateAsync();
+					await _localStorageService.SetItemAsync("token", loginResponse.Token);
+
+					_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Token);
+
+					return "Login successful";
+				}
+			}
+
+			return "Invalid email or password.";
+		}
+		public async Task<string> Register(RegisterModel registerModel)
         {
             var url = "Account/register";
             string fullUrl = $"{_baseUrl}/{url}";
