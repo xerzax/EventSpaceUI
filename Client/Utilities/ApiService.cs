@@ -150,7 +150,7 @@ namespace EventSpaceUI.Client.Utilities
 				if (!string.IsNullOrEmpty(loginResponse.Token))
 				{
 					await _sessionStorageService.SetItemAsync("JWT_TOKEN", loginResponse.Token);
-					await _authStateProvider.GetAuthenticationStateAsync();
+					//await _authStateProvider.GetAuthenticationStateAsync();
 					await _localStorageService.SetItemAsync("token", loginResponse.Token);
 
 					_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Token);

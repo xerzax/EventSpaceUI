@@ -8,17 +8,18 @@
 }
 
 .event-status {
-    padding: 0.5rem 0.5rem;
+    padding: 0.2rem 0.2rem;
     border-radius: 0.4rem;
     background-color: #EA9C01;
-    width: 15rem;
+    width: 6rem;
+    height: 2rem;
     text-align: center;
 }
 
 .box {
     border-radius: 0.5rem;
-    border: 1px solid red;
-    background-color: var(--colorPrimarys1);
+    border: 1px solid white;
+    background-color: #BA1D37;
     height: 50px;
     width: 50px;
 }
@@ -27,7 +28,7 @@
     cursor: pointer;
     padding: 1rem;
     border-radius: 0.5rem;
-    border: 1px solid black;
+    border: 1px solid #474747;
 }
 
     .event-list:hover {

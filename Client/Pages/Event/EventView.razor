@@ -3,141 +3,82 @@
 @using EventSpaceUI.Client.Utilities
 @using static EventSpaceUI.Client.Pages.Event.EventForm
 @inject IApiService _apiService
-
+@inject NavigationManager NavigationManager 
 
 <div class="container p-5">
-	<div class="row">
-		<img src="/images/livemusic.jpeg" class="event-img mt-5" />
+    <div class="row">
+        <img src="/images/livemusic.jpeg" class="event-img mt-5" />
+    </div>
+    <div class="row pt-5 ">
+        <div class="col-7">
+            <h2>@Event.Name</h2>
+            <h3 class="pt-1 pb-3">@Event.Artist</h3>
+            <div class="col-1 pt-3 event-status">
+                <h3>Paid</h3>
+            </div>
 
-	</div>
-	<div class="row pt-5 ">
-		<div class="col-7">
-			<h2>Event Name</h2>
-			<h3 class="pt-1 pb-3">By The Weeknd</h3>
-			<div class="col-1 pt-3 event-status">
-				<h3>Paid</h3>
-			</div>
-			@*  <input type="hidden" value="@Model.Id" id="eventId" />
-			@if (Model.Type == EventType.Fundraiser)
-			{
-			<a class="btn-main btn-main-fill mt-3 p-3 fs--heading-2" type="button" data-bs-toggle="modal" data-bs-target="#fundRaiserModal">Donate to fundraiser <i class="bi bi-piggy-bank"></i></a>
-			}
-			@if (Model.Type == EventType.Free)
-			{
-			<div class=" mt-5">
-			<a class="btn-main btn-main-fill p-3 fs--heading-2" data-bs-toggle="modal" data-bs-target="#freeTicketModal"><i class="bi bi-arrow-right">Get ticket</i></a>
+            @if (Event.TierList.Count > 0)
+            {
+                @foreach (var tier in Event.TierList)
+                {
+                    <div class=" row mb-2 d-flex mt-2 pb-5 justify-content-between event-list mt-2" @onclick="() => NavigateToTierView(tier.Id ?? 0)">
+                        <div class="col-3"> Name : @tier.Name</div>
+                        <div class="col-3"> Price : NPR. @tier.Price</div>
+                        <div class="col-3"> Available seats : @tier.AvailableSeats</div>
+                    </div>
+                }
+            }
+        </div>
 
-			</div>
+        <div class="col-1">
+            <div class="divider-evt"></div>
+        </div>
 
+        <div class=" col-4 pt-3">
+            <div class="row ">
+                <h2 class=" fs--heading-1">When and Where</h2>
 
-			} *@
-			@*  @if (Model.Type == EventType.Paid)
-			{
+                <div class="row justify-content-between ps-2 pt-5">
+                    <div class="col-2 p-1 d-flex justify-content-center box align-items-center">
+                        <i class="fas fa-calendar-week "></i>
+                    </div>
+                    <div class="col-10">
+                        <h3>Date and Time</h3>
+                        <h3>@Event.Date.ToShortDateString()</h3>
+                    </div>
+                </div>
 
-			@foreach (var obj in Model.Tiers)
-			{
-			*@
-			<div class="row mb-2 d-flex mt-2 pb-5 justify-content-between event-list mt-2" @* onclick="location.href='@Url.Action(" Index", "Ticket" , new { id=obj.Id }) *@'">
-				<div class="col-3"> Name : VIP</div>
-				<div class="col-3"> Price : NPR. 5000</div>
-				<div class="col-3"> Available seats : 50</div>
-				@* <div class="col-3 d-flex justify-content-end">
-
-
-
-				@if (Model.Type == EventType.Paid)
-				{
-
-				<a class="btn-main btn-main-fill" type="button" asp-controller="Ticket" asp-action="Index" asp-route-id="@obj.Id"><i class="bi bi-arrow-right"></i></a>
-				}
-				</div>
-				*@
-
-
-			</div>
-			<div class="row mb-2 d-flex mt-2 pb-5 justify-content-between event-list mt-2" @* onclick="location.href='@Url.Action(" Index", "Ticket" , new { id=obj.Id }) *@'">
-				<div class="col-3"> Name : Standing</div>
-				<div class="col-3"> Price : NPR. 3000</div>
-				<div class="col-3"> Available seats : 20</div>
-			</div>
-			<div class="row mb-2 d-flex mt-2 pb-5 justify-content-between event-list mt-2" @* onclick="location.href='@Url.Action(" Index", "Ticket" , new { id=obj.Id }) *@'">
-				<div class="col-3"> Name : Normal</div>
-				<div class="col-3"> Price : NPR. 1000</div>
-				<div class="col-3"> Available seats : 50</div>
-				@* <div class="col-3 d-flex justify-content-end">
-
-
-
-				@if (Model.Type == EventType.Paid)
-				{
-
-				<a class="btn-main btn-main-fill" type="button" asp-controller="Ticket" asp-action="Index" asp-route-id="@obj.Id"><i class="bi bi-arrow-right"></i></a>
-				}
-				</div>
-				*@
-
-
-			</div>
-			@* }
-
-			} *@
-		</div>
-
-		<div class="col-1">
-			<div class="divider-evt"></div>
-		</div>
-
-		<div class=" col-4 pt-3">
-			<div class="row ">
-				<h2 class=" fs--heading-1">When and Where</h2>
-
-				<div class="row justify-content-between ps-2 pt-5">
-					<div class="col-2 p-1 d-flex justify-content-center box align-items-center">
-						<i class="fas fa-calendar-week "></i>
-					</div>
-					<div class="col-10">
-						<h3>Date and Time</h3>
-						@* <h3>@Model.Date.ToString("MMMM dd, yyyy") @Model.Date.ToString("hh:mm tt")</h3> *@
-						<h3>March 20, 2024 3:00PM</h3>
-					</div>
-
-				</div>
-
-				<div class="row justify-content-between ps-2 pt-5">
-
-					<div class="col-2 p-1 d-flex justify-content-center  box align-items-center">
-						<i class="fas fa-map-marker-alt"></i>
-					</div>
-					<div class="col-10">
-						<h3>Location</h3>
-						<h3>Hyatt Palace</h3>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                <div class="row justify-content-between ps-2 pt-5">
+                    <div class="col-2 p-1 d-flex justify-content-center  box align-items-center">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="col-10">
+                        <h3>Location</h3>
+                        <h3>@Event.Venue</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-
-
-
-
-
-
-
 @code {
-	private EventResponseDTO Event;
+    private EventResponseDTO Event = new EventResponseDTO();
 
-	[Parameter]
-	public string EventId { get; set; }
+    [Parameter]
+    public string EventId { get; set; }
 
-	protected override async Task OnInitializedAsync()
-	{
-		if (!string.IsNullOrEmpty(EventId))
-		{
-			var endpoint = $"Event/GetEvent/{EventId}";
-			Event = await _apiService.CallApiAsync<EventResponseDTO>(endpoint, HttpMethod.Get);
-		}
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(EventId))
+        {
+            var endpoint = $"Event/{EventId}";
+            Event = await _apiService.CallApiAsync<EventResponseDTO>(endpoint, HttpMethod.Get);
+        }
+    }
+
+    private void NavigateToTierView(int tierId)
+    {
+        NavigationManager.NavigateTo($"/ticket/{tierId}");
+    }
 }

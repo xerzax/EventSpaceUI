@@ -100,13 +100,27 @@
 		public int TotalSeats { get; set; }
 		public List<TierRequestDTO> TierList { get; set; } = new List<TierRequestDTO>();
 	}
+    public class TierRequestDTO
+    {
+        public int? Id { get; set; }
 
-	public class TierRequestDTO
-	{
-		public string? Name { get; set; }
-		public int TotalSeats { get; set; }
-		public int Price { get; set; }
-	}
+        public string? Name { get; set; }
+        public int TotalSeats { get; set; }
+        public int Price { get; set; }
+        public int? AvailableSeats { get; set; }
+    }
+
+    public class TierDTO
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public int TotalSeats { get; set; }
+        public int AvailableSeats { get; set; }
+
+        public int Price { get; set; }
+        public int AmountRaised { get; set; }
+        public int EventId { get; set; }
+    }
 
 	private void AddTier()
 	{
