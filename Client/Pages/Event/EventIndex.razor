@@ -40,7 +40,7 @@
 								<p><span class="text-secondary pe-1">Artist</span> @obj.Artist</p>
 								<p><span class="text-secondary pe-1">Location</span> @obj.Venue</p>
 								<p><span class="text-secondary pe-1">Seats</span>@obj.TotalSeats</p>
-							</div> 
+							</div>
 						</div>
 						<div class="d-flex justify-content-between align-items-center mt-3">
 							<div class="evt-btn btn-main-fill btn-main">Paid</div>
@@ -94,7 +94,7 @@
 	</div>
 	</div>
 	}
-	</div> *@ 
+	</div> *@
 @page "/eventindex"
 
 @using EventSpaceUI.Client.Utilities
@@ -133,7 +133,8 @@
 								<div class="fs--heading-2">@obj.Date.ToString("ddd")</div>
 								<div>@obj.Date.ToString("MMMM dd")</div>
 							</div>
-							<div class="ps-4">
+							<div class="ps-4 details">
+								<p><span class="text-secondary pe-1"></span> @obj.Name</p>
 								<p><span class="text-secondary pe-1">Artist</span> @obj.Artist</p>
 								<p><span class="text-secondary pe-1">Location</span> @obj.Venue</p>
 								<p><span class="text-secondary pe-1">Seats</span>@obj.TotalSeats</p>
@@ -141,9 +142,6 @@
 						</div>
 						<div class="d-flex justify-content-between align-items-center mt-3">
 							<div class="evt-btn btn-main-fill btn-main">Paid</div>
-							<a href="#" class="wishlist-btn btn-main-outline btn-main">
-								<i class="t-secondary fas fa-bookmark"></i>
-							</a>
 						</div>
 
 					</div>

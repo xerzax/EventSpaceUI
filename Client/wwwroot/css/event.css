@@ -95,7 +95,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 .event-card .event-details {
     padding-top: 0.5rem;
-    padding: 1rem 2rem;
+    padding: 1rem 1rem;
    
 }
 
@@ -104,7 +104,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     }
 
         .event-card .event-details .evt-date .date {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: #BA1D37;
         }
 
@@ -118,4 +118,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     top: 1rem;
     background-color: #0B0C10;
     color: white;
+}
+
+.details p{
+    font-size: 16px;
 }

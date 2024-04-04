@@ -7,121 +7,121 @@
 @inject IJSRuntime jsRuntime
 
 
-<div class="container mt-5">
-	<div class="row justify-content-center">
-		<div class="col-md-8 mt-4 p-5">
-			<div class="card">
-				<div class="card-header bg-danger text-white">
-					<h2 class="card-title text-center mb-0">Ticket Purchase Form</h2>
+<div class="container pt-5">
+
+	<div class="row p-5 pt-4">
+		<div class="col-6 bg--secondary p-5 border-curved">
+			<input type="hidden" id="tierId" value="@tier.Id" />
+			<div class="pb-5">
+				<h3 class="pt-4"><span>Tier type:</span> @tier.Name</h3>
+				<h3 class="pt-4"><span>Price per seat:</span> <span id="price">@tier.Price</span></h3>
+			</div>
+			<input type="hidden" id="tierSeats" value="@tier.AvailableSeats" />
+			<div class="pb-5">
+				<input type="number" @bind="ticketQuantity" class="form-control" placeholder="Enter number of tickets" @oninput="CalculateTotal" />
+			</div>
+			<div class="pt-4 d-grid gap-2">
+				<button type="button" id="proceedBtn" class="btn btn-main btn-main-fill" data-bs-toggle="modal" data-bs-target="#ticketModal">Proceed</button>
+			</div>
+		</div>
+
+		<div class="col-1">
+			<div class="divider-evt"></div>
+		</div>
+
+		<div class="col-5">
+			<div id="ticketDetails" class="p-5" style="border: 1px dashed white">
+				<div class="d-flex justify-content-between fs--normal">
+					<div>Price</div>
+					<div>Qty</div>
+					<div>Total</div>
 				</div>
+				<div class="d-flex justify-content-between pt-5">
+					<div>@tier.Price</div>
+					<div>@ticketQuantity</div>
+					<div>@totalPrice</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-				@if(tier != null)
-				{
-					<p>Name: @tier.Name</p>
-					<p>Price: @tier.Price</p>
-					<p>Name: @tier.AvailableSeats</p>
-
-				}
-				@* 	<div class="card-body">
-					<div class="row">
-						<div class="col-md-6">
-							<form @onsubmit="PurchaseTicket">
-								<div class="mb-3">
-									<label for="eventName" class="form-label text-white">Event Name</label>
-									<input type="text" class="form-control" id="eventName" value="@SelectedEvent?.Name" readonly />
-								</div>
-								<div class="mb-3">
-									<label for="Quantity" class="form-label text-white">Ticket Quantity</label>
-									<input type="number" class="form-control" id="Quantity" @bind="newTicket.Qty" required />
-								</div>
-								<div class="mb-3">
-									<label for="TierName" class="form-label text-white">Tier</label>
-									<select class="form-control" id="TierName" @bind="newTicket.TierName" required>
-										<option value="">Select Tier</option>
-										@if (SelectedEvent != null)
-										{
-											@foreach (var tier in SelectedEvent.TierList)
-											{
-												<option value="@tier.Name">@tier.Name</option>
-											}
-										}
-									</select>
-								</div>
-								<div class="text-center">
-									<button type="submit" class="btn btn-danger">Purchase</button>
-								</div>
-							</form>
-						</div>
-						<div class="col-md-6 d-flex align-items-stretch border-start border-1">
-							@if (SelectedEvent != null)
-							{
-								<div class="card w-100">
-									<img src="/images/eventlogo.png" class="card-img-top" alt="Event Logo">
-								</div>
-							}
-						</div>
-					</div>
-				</div> *@
+	<div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content bg--primary border-white">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="eventModalLabel">Ticket confirmation</h1>
+					<button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="pt-3"><span>Tier type:</span> @tier.Name</div>
+					<div class="pt-3"><span>Price per seat:</span> <span id="confirmPrice">@tier.Price</span></div>
+					<div class="pt-3">Total: NPR. @totalPrice</div>
+					<input type="email" class="form-control d-block mt-3" id="receiverEmail" placeholder="Enter receiver email" />
+					<button id="payment-button" class="btn btn-success mt-4" @onclick="PurchaseTicket">Pay with Khalti</button>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-
 @code {
+	private TierDTO tier = new TierDTO();
 	private TicketModel newTicket = new TicketModel();
 	private EventResponseDTO SelectedEvent;
 	private List<EventResponseDTO> Events;
-
-	private TierDTO tier = new TierDTO();
+	private int ticketQuantity = 0;
+	private decimal totalPrice = 0;
 
 	[Parameter]
 	public string TierId { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
+	protected override async Task OnInitializedAsync()
+	{
 		if (!string.IsNullOrEmpty(TierId))
 		{
-
 			var endpoint = $"Event/GetTierById/{TierId}";
 			tier = await _apiService.CallApiAsync<TierDTO>(endpoint, HttpMethod.Get);
 		}
-    }
+	}
 
-    private async Task LoadEventDetails()
-    {
-        if (newTicket.EventID != 0)
-        {
-            SelectedEvent = Events.FirstOrDefault(e => e.Id == newTicket.EventID);
-        }
-    }
+	private void CalculateTotal()
+	{
+		totalPrice = tier.Price * ticketQuantity;
+	}
+	private async Task LoadEventDetails()
+	{
+		if (newTicket.EventID != 0)
+		{
+			SelectedEvent = Events.FirstOrDefault(e => e.Id == newTicket.EventID);
+		}
+	}
 
-    private async Task PurchaseTicket()
-    {
-        try
-        {
-            await LoadEventDetails();
-
-            var createdEvent = await _apiService.CallApiAsync<TicketModel>("Ticket/buy-tickets", HttpMethod.Post, newTicket);
-            Console.WriteLine("Ticket purchased successfully.");
-            await jsRuntime.InvokeVoidAsync("toastr.success", "Tickets purchase successful!");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred while creating the event: {ex.Message}");
-            await jsRuntime.InvokeVoidAsync("toastr.error", "Ticket purchase failed");
-            throw;
-        }
-    }
-
-    public class TicketModel
-    {
-        public int Qty { get; set; }
-        public string TierName { get; set; }
-        public int EventID { get; set; }
-    }
+	private async Task PurchaseTicket()
+	{
+		try
+		{
+			await LoadEventDetails();
+			var createdEvent = await _apiService.CallApiAsync<TicketModel>("Ticket/buy-tickets", HttpMethod.Post, newTicket);
+			Console.WriteLine("Ticket purchased successfully.");
+			await jsRuntime.InvokeVoidAsync("toastr.success", "Tickets purchase successful!");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"An error occurred while purchasing the ticket: {ex.Message}");
+			await jsRuntime.InvokeVoidAsync("toastr.error", "Ticket purchase failed");
+		}
+	}
+	public class TicketModel
+	{
+		public int Qty { get; set; }
+		public string TierName { get; set; }
+		public int EventID { get; set; }
+	}
 }
- 
+
+
+
+
 
 
 

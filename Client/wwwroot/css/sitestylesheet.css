@@ -1,0 +1,56 @@
+﻿/*:root {
+    --colorPrimarys1: #BA1D37;
+    --colorPrimarys2: white;
+    --colorSecondarys1: #0B0C10;
+    --colorSecondarys2: rgba(0, 0, 0, 0.9);
+    --colorTertiary: #C5C6C7;
+    --colorWhite: rgb(222, 222, 222);
+}
+
+
+
+body {
+    overflow-x: hidden;
+    font-size: 1.6rem;
+    background-color: var(--colorSecondarys2);
+    color: white;
+    font-family: 'Lato', sans-serif;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);*/ /* Invert the color of the icon */
+/*}
+
+input[type="file"]::file-selector-button {
+    background-color: var(--colorPrimarys1);
+    color: white;
+}
+
+input, select {
+    background-color: var(--colorSecondarys1) !important;
+    color: white !important;
+}
+
+    input[type=checkbox] {
+        height: 2rem;
+        accent-color: var(--colorPrimarys1);
+    }
+
+    input:focus {
+        color: white !important;
+    }
+
+.form-control, .form-select {
+    padding: 0.7rem 0.6rem !important;
+}
+
+.form-select-custom {
+    border: 1px solid var(--colorSecondarys2) !important;
+    color: var(--colorSecondarys2) !important;
+}
+
+
+a {
+    color: white !important;
+    text-decoration: none !important;
+}*/

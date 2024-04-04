@@ -1,27 +1,364 @@
-﻿@page "/post"
+﻿@page "/postindex"
 
-<div class="container-fluid p-4">
-	<div class="row mt-5">
+<div class="container-fluid p-4 mt-5">
 
-			<!-- Displaying Uploaded Blogs -->
-			<div class="col-md-6">
-				<!-- Left column -->
-				<HorizontalCard />
-				<HorizontalCard />
-				<HorizontalCard />
-				<HorizontalCard />
+	<div class="row pb-5 ">
+		<div class="col-md-3 side-section p-5 pt-5">
+
+			<div>
+				<div class="divider mt-2 mb-2"></div>
+
+				<h2 class=" fs--heading-2"><i class="fas fa-rocket pe-3"></i><span>EventSpace</span></h2>
+				<div class="divider mt-2 mb-2"></div>
+
+
+			</div>
+			<div class="pt-5 ">
+
+				<div class="pb-3">
+					<button type="button" class="btn-main btn-main-fill w-100" data-bs-toggle="modal" data-bs-target="#photoModal">
+						<i class="fas fa-upload"></i> <span>Upload photo</span>
+					</button>
+				</div>
+
+
+				<div class="pb-3">
+
+					<button type="button" class="btn-main btn-main-fill w-100" data-bs-toggle="modal" data-bs-target="#blogModal">
+						<i class="fas fa-pen"></i> <span>Write blog</span>
+					</button>
+
+				</div>
+				<div class="pb-3">
+					<button type="button" class="btn-main btn-main-fill w-100" data-bs-toggle="modal" data-bs-target="#playlistModal">
+						<i class="fas fa-music"></i> <span>Create playlist</span>
+					</button>
+
+				</div>
 			</div>
 
-			<div class="col-md-6">
-				<!-- Right column -->
-				<HorizontalCard />
-				<HorizontalCard />
-				<HorizontalCard />
-				<HorizontalCard />
+			<div class="pt-5 pb-5">
+
+				<div class="divider mb-5"></div>
+				<div class="divider mt-5"></div>
+			</div>
+		</div>
+
+		<div class="col-md-6 ps-5 pe-5 pb-5 main-section border-gray">
+
+			<ul class="nav nav-tabs nav-tabs-custom mt-4" id="myTab" role="tablist">
+				<li class="nav-item nav-item-custom" role="presentation">
+					<button class="nav-link nav-link-custom active" id="photo-tab" data-bs-toggle="tab" data-bs-target="#photo-tab-pane" type="button" role="tab" aria-controls="photo-tab-pane" aria-selected="true">Photo</button>
+				</li>
+				<li class="nav-item nav-item-custom" role="presentation">
+					<button class="nav-link nav-link-custom" id="blog-tab" data-bs-toggle="tab" data-bs-target="#blog-tab-pane" type="button" role="tab" aria-controls="blog-tab-pane" aria-selected="false"> Blog</button>
+				</li>
+				<li class="nav-item nav-item-custom" role="presentation">
+					<button class="nav-link nav-link-custom" id="playlist-tab" data-bs-toggle="tab" data-bs-target="#playlist-tab-pane" type="button" role="tab" aria-controls="Playlist-tab-pane" aria-selected="false">Playlist</button>
+				</li>
+
+			</ul>
+			<div class="tab-content pt-4" id="myTabContent">
+				<div class="tab-pane fade show active" id="photo-tab-pane" role="tabpanel" aria-labelledby="photo-tab" tabindex="0">
+					@* @foreach (var obj in Model.Photolist)
+					{
+					<div class="card card-custom  mb-5 w-80  border-gray" onclick="location.href='@Url.Action("ViewPhoto", "Post", new { id = obj.Id })'">
+					@if (!string.IsNullOrEmpty(obj.PhotoName))
+					{
+					<img src="/Uploads/@obj.PhotoName" class="card-img-top" />
+
+
+					}
+					else
+					{
+					<img src="~/images/default.jpg" class="card-img-top" />
+
+					}
+					<div class="card-body">
+
+					<p>
+					<h2 class="card-title">@obj.Title</h2>
+
+					</p>
+					<p class="card-text">
+					<small class="text-secondary">
+					Added date
+					@obj.CreatedAt.ToShortDateString()
+					</small>
+					</p>
+					<p class="card-text">
+					<small class="text-secondary">
+					@{
+					var user = await UserManager.FindByIdAsync(obj.UserId);
+					var name = user.FirstName;
+					}
+					Added by @name
+					</small>
+					</p>
+					<p>
+					@if (obj.UserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+					{
+					<a href="@Url.Action("DeletePhoto", "Post", new { id = obj.Id })" class="btn-main btn-main-fill">Delete</a>
+
+					}
+					</p>
+					</div>
+					</div>
+
+					} *@
+				</div>
+				<div class="tab-pane fade" id="blog-tab-pane" role="tabpanel" aria-labelledby="blog-tab" tabindex="0">
+
+					@*   @foreach (var obj in Model.BlogList)
+					{
+					<div class="card card-custom mb-5 w-80  border-gray" onclick="location.href='@Url.Action("ViewBlog", "Post", new { id = obj.Id })'">
+					@if (!string.IsNullOrEmpty(obj.PhotoName))
+					{
+					<img src="/Uploads/@obj.PhotoName" class="card-img-top" />
+
+
+					}
+					else
+					{
+					<img src="~/images/default.jpg" class="card-img-top" />
+
+					}
+
+
+					<div class="card-body">
+					<p>
+					<h2 class="card-title">@obj.Title</h2>
+
+					</p>
+					<p class="card-text">
+					@obj.Content
+					</p>
+					<p class="card-text">
+					<small class="text-secondary">
+					Added date
+					@obj.CreatedAt.ToShortDateString()
+
+					</small>
+					</p>
+					<p class="card-text">
+					<small class="text-secondary">
+					@{
+					var user = await UserManager.FindByIdAsync(obj.UserId);
+					var name = user.FirstName;
+					}
+					Added by @name
+					</small>
+					</p>
+					</div>
+
+					</div>
+					}
+					*@
+				</div>
+				<div class="tab-pane fade" id="playlist-tab-pane" role="tabpanel" aria-labelledby="contplaylistact-tab" tabindex="0">
+					@* @foreach (var obj in Model.Playlist)
+					{
+
+
+					<div class="card card-custom  mb-5 w-80  border-gray" onclick="location.href='@Url.Action("ViewPlayList", "Post", new { id = obj.Id })'">
+					<img src="~/images/default.jpg" class="card-img-top" />
+					<img src="PhotoName" class="card-img-top" />
+
+					<div class="card-body">
+						<p>
+							<h2 class="card-title">Title</h2>
+
+						</p>
+						<div class="text-danger ">Playlist</div>
+						<p class="card-text">
+							<small class="text-secondary">
+								Added date
+								CreatedAt.ToShortDateString()
+
+
+							</small>
+						</p>
+						<p class="card-text">
+							<small class="text-secondary">
+								@{
+									var user = await UserManager.FindByIdAsync(obj.UserId);
+									var name = user.FirstName;
+								}
+								Added by @name
+							</small>
+						</p>
+					</div>
+				</div>
+				}
+ *@
+			</div>
+		</div>
+
+
+
+
+
+	</div>
+	<div class=" col-md-3 side-section p-5">
+
+		<div class="playlist border-gray">
+
+			<h2 class="text-secondary">My Playlist <i class="bi bi-music-note-list"></i></h2>
+			@* @foreach (var obj in Model.UserPlaylist)
+			{
+			<div class="d-flex justify-content-between">
+			<a class="text-white pt-2" asp-controller="Post" asp-action="ViewPlaylist" asp-route-id="@obj.Id"># @obj.Title</a>
 			</div>
 
-		<div class="col">
-			<Card />
+
+
+
+
+			}
+			</div>
+			<div class="playlist border-gray mt-5">
+
+			<h2 class="text-secondary">My Photos <i class="bi bi-music-note-list"></i></h2>
+			@foreach (var obj in Model.Photolist)
+			{
+
+			<div class="d-flex  row ">
+			<div class="col-6">
+			<img src="/Uploads/@obj.PhotoName" style="height:50px; width:50px;object-fit:cover" />
+			</div>
+			</div>
+			} *@
+		</div>
+
+
+	</div>
+</div>
+
+
+
+
+
+<div class="modal fade " id="blogModal" tabindex="-1" aria-labelledby="blogModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg--secondary">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Create blog</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form method="post" asp-controller="Post" asp-action="CreateBlog" enctype="multipart/form-data">
+					<div class="mb-3">
+						<label class="form-label">Title</label>
+						<input class="form-control" asp-for="Title" placeholder="Title" type="text" required />
+						<span class="text-dark fs--xsmall" asp-validation-for="Title"></span>
+
+					</div>
+					<div class="mb-3">
+						<input type="file" class="form-control" asp-for="PhotoUrl" required />
+						<span class="text-dark fs--xsmall" asp-validation-for="PhotoUrl"></span>
+
+					</div>
+
+
+					<div class="mb-3">
+						<label class="form-label">Content</label>
+
+						<input class="form-control" asp-for="Content" placeholder="Content" type="text" id="editor" required />
+						<span class="text-dark fs--xsmall" asp-validation-for="Blogs.Content"></span>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn-main btn-dark" data-bs-dismiss="modal">Close</button>
+						<button class="btn-main btn-dark" type="submit">Write blog</button>
+
+					</div>
+				</form>
+			</div>
+
 		</div>
 	</div>
 </div>
+
+
+<div class="modal fade " id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg--secondary">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Upload Photo</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form method="post" asp-controller="Post" asp-action="UploadPhoto" enctype="multipart/form-data">
+					<div class="mb-3">
+						<label class="form-label">Title</label>
+						<input class="form-control" asp-for="Title" placeholder="Caption" ype="text" required />
+						<span class="text-dark fs--xsmall" asp-validation-for="Title"></span>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Tags</label>
+						<input class="form-control" asp-for="Tags" placeholder="Tags" ype="text" required />
+						<span class="text-dark fs--xsmall" asp-validation-for="Tags"></span>
+					</div>
+					<div class="mb-3">
+						<input type="file" class="form-control" asp-for="PhotoUrl" required />
+						<span class="text-dark fs--xsmall" asp-validation-for="PhotoUrl"></span>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn-main btn-dark" data-bs-dismiss="modal">Close</button>
+						<button class="btn-main btn-dark" type="submit">Upload</button>
+
+
+					</div>
+
+
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="playlistModal" aria-hidden="true" aria-labelledby="playListModalLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content   bg--secondary">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="playlistModalLabel">Find songs</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form method="Post" asp-controller="Post" asp-action="SearchResult">
+					<div class="input-group">
+						<input type="text" name="query" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" />
+						<button class="btn btn-dark" type="submit" id="button-addon2"><i class="bi bi-search"></i> </button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+
+
+
+
+
+
+<script>
+	ClassicEditor
+		.create(document.querySelector('#editor'))
+		.then(editor => {
+			console.log(editor);
+			editor.ui.getEditableElement().style.backgroundColor = 'lightgray';
+
+			// Change text color
+			editor.ui.getEditableElement().style.color = 'blue';
+		})
+		.catch(error => {
+			console.error(error);
+		});
+</script>
+

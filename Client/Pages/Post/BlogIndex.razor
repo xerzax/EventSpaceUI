@@ -2,6 +2,9 @@
 @using EventSpaceUI.Client.Utilities
 @inject HttpClient HttpClient
 @inject IApiService _apiService
+@inject HttpClient Http
+
+
 
 <div class="container-fluid p-4">
     <div class="row mt-5">
@@ -15,6 +18,11 @@
                         <div class="col-md-6 mb-4">
                             <div class="card">
                                 <div class="card-body">
+                                    @if(!string.IsNullOrEmpty(blog.PhotoName))
+                                    {
+                                        var x = $"https://localhost:7060/uploads/blog/{blog.PhotoName}";
+                                        <img src="@x" />
+                                    }
                                     <h5 class="card-title text-white">@blog.Title</h5>
                                     <p class="card-text text-white">@blog.Content</p>
                                     <p class="card-text text-white">@blog.PhotoName</p>
@@ -58,63 +66,4 @@
     </div>
 </div>
 
-@* @page "/blog"
-@using EventSpaceUI.Client.Utilities
-@inject HttpClient HttpClient
-@inject IApiService _apiService
-
-<div class="container-fluid p-0">
-    <div class="row justify-content-center align-items-center min-vh-100 bg-dark">
-        <div class="row align-items-center">
-            <div class="col-8">
-                <div class="card-container">
-                    @if (blogs != null && blogs.Any())
-                    {
-                        @foreach (var blog in blogs)
-                        {
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title text-light">@blog.Title</h5>
-                                    <p class="card-text text-light">@blog.Content</p>
-                                    <p class="card-text text-light">@blog.PhotoName</p>
-                                </div>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <p class="text-white-50"><em>Loading...</em></p>
-                    }
-                </div>
-            </div>
-            <div class="col-4">
-                <!----------------------- Blog Upload Container -------------------------->
-                <div class="d-flex justify-content-center align-items-center min-vh-100">
-                    <div class="col-md-8">
-                        <div class="row align-items-center">
-                            <div class="header-text text-center mb-4 text-white">
-                                <h2>Upload Blog</h2>
-                                <p>Upload your event memories!</p>
-                            </div>
-                            <form @onsubmit="CreateBlog" class="w-100">
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Blog Title" @bind="newBlog.Title">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Photo Name" @bind="newBlog.PhotoName">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <textarea id="Content" class="form-control form-control-lg bg-light fs-6" placeholder="Blog Content" @bind="newBlog.Content"></textarea>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <button type="submit" class="btn btn-lg btn-outline-light w-100 fs-6">Create Blog</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> *@
 

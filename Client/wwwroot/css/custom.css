@@ -184,12 +184,152 @@ p {
     }
 
 
-.wishlist-btn {
-    position: absolute;
-    width: inherit;
-    left: 1rem;
-    top: 1rem;
-    background-color: #0B0C10;
-    color: white;
+
+/*.search-main {
+.search-input {
+    padding: 1rem;
+    height: 2rem;
+    font-size: 2rem;
 }
 
+
+.has-search {
+    position: relative;
+}
+
+
+    .has-search .form-control {
+        padding-left: 4rem;
+    }
+
+    .has-search .form-control-feedback {
+        position: absolute;
+        display: block;
+        top: 1.2rem;
+        left: 47rem;
+        font-size: 1rem;
+        line-height: 2.375rem;
+        text-align: center;
+        pointer-events: none;
+        color: #aaa;
+    }
+    width: 40%;
+    padding-top: 5rem;
+}
+
+.img-bg {
+    background-color: red;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/mainimage.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-size: cover;
+}
+
+.main-sec {
+
+    position: relative;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}*/
+/*.search-main {
+    width: 40%;
+    padding-top: 5rem;
+}
+
+.search-input {
+    padding: 1rem;
+    height: 3rem;  Increased height for better visibility and interaction 
+    font-size: 1.2rem;
+    width: 100%;
+    border-radius: 2rem;  Increased border radius for a rounded look 
+    border: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.9);  Adjusted background color transparency 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  Added box shadow for depth 
+}
+
+.has-search {
+    position: relative;
+}
+
+    .has-search .form-control-feedback {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 1rem;  Adjusted right position for the search icon 
+        font-size: 1.5rem;  Increased font size for better visibility 
+        color: #aaa;
+    }
+
+.img-bg {
+    background-color: red;
+    background-image: url('../images/mainimage.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.main-sec {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+*/
+.search-main {
+    width: 40%;
+    padding-top: 5rem;
+}
+
+.search-input {
+    padding: 1rem;
+    height: 3rem;
+    font-size: 1.2rem;
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid black;
+    font-family: Courier New, Courier, monospace;
+
+    color: white;  Text color for the dark theme 
+}
+
+.has-search {
+    position: relative;
+}
+
+    .has-search .form-control-feedback {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 1rem;
+        font-size: 1.5rem;
+        color: #aaa;
+    }
+
+.img-bg {
+    background-color: red;
+    background-image: url('../images/mainimage.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.main-sec {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.display-4 {
+    font-size: 3rem;  Adjusted font size for the h1 element 
+    font-family: Arial, sans-serif;  Change font family for the h1 element 
+    color: #fff;  Text color for the h1 element 
+}

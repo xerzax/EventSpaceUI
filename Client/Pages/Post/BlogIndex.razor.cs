@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Reflection;
+using static EventSpaceUI.Client.Pages.Todo.Todo;
 
 namespace EventSpaceUI.Client.Pages.Post
 {
@@ -10,7 +12,7 @@ namespace EventSpaceUI.Client.Pages.Post
     {
         private List<Blog> blogs;
         private Blog newBlog = new Blog();
-
+        private string imageUrl = "";
 
         public class Blog
         {
@@ -18,8 +20,6 @@ namespace EventSpaceUI.Client.Pages.Post
             public string Content { get; set; }
 
             public string? PhotoName { get; set; }
-            public IBrowserFile File { get; set; }
-
         }
 
         protected override async Task OnInitializedAsync()
@@ -29,93 +29,43 @@ namespace EventSpaceUI.Client.Pages.Post
             blogs = await _apiService.CallApiAsync<List<Blog>>(endpoint, HttpMethod.Get);
         }
 
-        //private async Task CreateBlog()
-        //{
-        //    var endpoint = "Blog/PostBlogs";
-        //    var formData = new MultipartFormDataContent();
+		private async Task CreateBlog()
+		{
+			var endpoint = "Blog/PostBlogs";
+			//var formData = new MultipartFormDataContent();
 
-        //    formData.Add(new StringContent(newBlog.Title), nameof(newBlog.Title));
-        //    formData.Add(new StringContent(newBlog.Content), nameof(newBlog.Content));
-        //    formData.Add(new StringContent(newBlog.PhotoName), nameof(newBlog.PhotoName));
+			//formData.Add(new StringContent(newBlog.Title), nameof(newBlog.Title));
+			//formData.Add(new StringContent(newBlog.Content), nameof(newBlog.Content));
+			//formData.Add(new StringContent(newBlog.PhotoName), nameof(newBlog.PhotoName));
 
-        //    if (newBlog.File != null)
-        //    {
-        //        const long maxAllowedSize = 10 * 1024 * 1024;
-        //        var fileStream = new MemoryStream();
-        //        //await newBlog.File.OpenReadStream().CopyToAsync(fileStream);
-        //        await newBlog.File.OpenReadStream(maxAllowedSize).CopyToAsync(fileStream);
-        //        fileStream.Seek(0, SeekOrigin.Begin);
+			//blogs = await _apiService.CallApiAsync<List<Blog>>(endpoint, HttpMethod.Post, formData);
 
-        //        var streamContent = new StreamContent(fileStream);
-        //        streamContent.Headers.ContentType = new MediaTypeHeaderValue(newBlog.File.ContentType);
-
-        //        formData.Add(streamContent, "file", newBlog.File.Name);
-        //    }
-
-
-        //    blogs = await _apiService.CallApiAsync<List<Blog>>(endpoint, HttpMethod.Post, formData);
-        //}
-        private async Task CreateBlog()
-        {
-            var endpoint = "Blog/PostBlogs";
-
-            try
-            {
-                var formData = new MultipartFormDataContent();
-
-                // Add the string content fields
-                formData.Add(new StringContent(newBlog.Title), "Title");
-                formData.Add(new StringContent(newBlog.Content), "Content");
-                formData.Add(new StringContent(newBlog.PhotoName), "PhotoName");
-
-				if (newBlog.File != null)
-				{
-					const long maxAllowedSize = 10 * 1024 * 1024;
-
-					if (newBlog.File.Size > maxAllowedSize)
-					{
-						throw new InvalidOperationException("File size exceeds the maximum allowed size.");
-					}
-
-					using (var fileStream = new MemoryStream())
-					{
-						try
-						{
-							await newBlog.File.OpenReadStream().CopyToAsync(fileStream);
-							fileStream.Seek(0, SeekOrigin.Begin);
-
-							var streamContent = new StreamContent(fileStream);
-							streamContent.Headers.ContentType = new MediaTypeHeaderValue(newBlog.File.ContentType);
-
-							formData.Add(streamContent, "file", newBlog.File.Name);
-
-							blogs = await _apiService.CallApiAsyncForm<List<Blog>>(endpoint, HttpMethod.Post, formData);
-						}
-						catch (Exception ex)
-						{
-							throw new Exception("Error occurred while reading the file or copying content to stream.", ex);
-						}
-					}
-				}
-
-
-
-
-				blogs = await _apiService.CallApiAsyncForm<List<Blog>>(endpoint, HttpMethod.Post, formData);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while creating the blog: {ex.Message}");
-                throw;
-            }
+            await _apiService.CallApiAsync<Blog>("Blog/PostBlogs", HttpMethod.Post, newBlog);
         }
+
 
         private async Task OnInputFileChange(InputFileChangeEventArgs e)
-        {
+		{
+            using var formData = new MultipartFormDataContent();
+
             var file = e.File;
-            newBlog.File = file;
-        }
 
+            var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
 
-    }
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+            formData.Add(content: fileContent, name: "File", fileName: file.Name);
+
+            formData.Add(new StringContent("1"), "FilePath");
+
+            var response = await Http.PostAsync("https://localhost:7060/api/File/upload", formData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var uploadedResult = await response.Content.ReadAsStringAsync();
+
+                newBlog.PhotoName = uploadedResult ?? "";
+            }
+		}
+	}
 }
