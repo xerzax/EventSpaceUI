@@ -33,12 +33,28 @@
 .playlist {
     height: 200px;
     overflow-y: scroll;
-    background-color: var(--colorSecondarys2);
+    background-color: rgba(0, 0, 0, 0.9);
     padding: 1rem;
+
 }
 
 .post-img {
     width: 100%;
     height: 150px;
     object-fit: cover;
+}
+
+
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    border-color: red darkred darkred !important;
+    color: white !important;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid darkred !important;
+}
+
+.nav-link {
+    color: white !important;
 }
