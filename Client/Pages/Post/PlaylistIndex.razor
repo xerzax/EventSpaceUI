@@ -1,0 +1,488 @@
+﻿@* @page "/playlist"
+@using EventSpaceUI.Client.Utilities
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+
+
+
+<h3>PlaylistIndexrazor</h3>
+
+
+<input type="text" class="form-control" placeholder="Blog Title" id="blogTitle" @bind="searchString">
+<button type="button" class="btn btn-danger" @onclick="() => SearchPlaylist(searchString)">Create Blog</button>
+
+@if(playlist.Count >0)
+{
+	@foreach(var video in playlist)
+	{
+
+
+		<div  style="border:1px solid red;" class="row p-2 mt-2">
+			<div class="col-2 d-flex flex-column justify-content-center">
+
+				<input type="checkbox" name="selectSongs" value="@video.VideoId, @video.Title,@video.ThumbnailUrl" id="@video.VideoId">
+			</div>
+			<div class="col-6 pt-3">
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
+
+		</div>
+	}
+}
+
+
+
+
+@code {
+
+	private string searchString = "";
+
+	private List<YoutubeSearchResult> playlist = new List<YoutubeSearchResult>();
+
+
+	public class YoutubeSearchResult
+	{
+		public string Title { get; set; }
+		public string Description { get; set; }
+		public string ThumbnailUrl { get; set; }
+		public string VideoId { get; set; }
+		public string ChannelTitle { get; set; }
+	}
+
+
+	private async void SearchPlaylist(string search)
+	{
+		// var url = $"playlist/search-songs/{search}";
+		var url = $"playlist/search-songs?songName={Uri.EscapeDataString(search)}";
+		playlist = await _apiService.CallApiAsync<List<YoutubeSearchResult>>(url, HttpMethod.Get);
+    }
+
+}
+ *@
+
+
+
+
+@* <div class="container min-vh-100">
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" @bind="searchString">
+                <button class="btn-main btn-main-fill" type="button" id="button-addon2" @onclick="SearchPlaylist"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <input type="text" class="form-control" placeholder="Add Title" @bind="title">
+
+        <button type="button" class="btn btn-primary" @onclick="CreatePlaylist">Create Playlist</button>
+    </div>
+
+
+
+    <div class="row justify-content-center pt-5">
+        @if (playlist.Count > 0)
+        {
+            @foreach (var video in playlist)
+            {
+                <div class="col-md-6">
+                    <div class="card border-danger mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2 d-flex flex-column justify-content-center">
+                                    <input type="checkbox" name="selectSongs" value="@video.VideoId, @video.Title,@video.ThumbnailUrl" id="@video.VideoId" @onchange="() => ToggleSelection(video.VideoId,video.Title)">
+                                </div>
+                                <div class="col-10">
+                                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-6">
+                <p class="text-center">No videos found.</p>
+            </div>
+        }
+    </div>
+</div> *@
+
+@* <div class="container min-vh-100">
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" @bind="searchString">
+                <button class="btn-main btn-main-fill" type="button" id="button-addon2" @onclick="SearchPlaylist"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pt-3">
+        <div class="col-md-6">
+            <input type="text" class="form-control" placeholder="Add Title" @bind="title">
+        </div>
+        <div class="col-md-6">
+            <button type="button" class="btn btn-primary w-100" @onclick="CreatePlaylist">Create Playlist</button>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pt-5">
+        @if (playlist.Count > 0)
+        {
+            @foreach (var video in playlist)
+            {
+                <div class="col-md-6">
+                    <div class="card border-danger mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2 d-flex flex-column justify-content-center">
+                                    <input type="checkbox" name="selectSongs" value="@video.VideoId, @video.Title,@video.ThumbnailUrl" id="@video.VideoId" @onchange="() => ToggleSelection(video.VideoId,video.Title)">
+                                </div>
+                                <div class="col-10">
+                                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-6">
+                <p class="text-center">No videos found.</p>
+            </div>
+        }
+    </div>
+</div> *@
+@* <div class="container min-vh-100 pt-5">
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" @bind="searchString">
+                <button class="btn-main btn-main-fill" type="button" id="button-addon2" @onclick="SearchPlaylist"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-6">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary mb-4">Create Playlist</h5>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" placeholder="Add Title" @bind="title">
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary w-100" @onclick="CreatePlaylist">Create Playlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pt-5">
+        @if (playlist.Count > 0)
+        {
+            @foreach (var video in playlist)
+            {
+                <div class="col-md-6">
+                    <div class="card border-danger mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2 d-flex flex-column justify-content-center">
+                                    <input type="checkbox" name="selectSongs" value="@video.VideoId, @video.Title,@video.ThumbnailUrl" id="@video.VideoId" @onchange="() => ToggleSelection(video.VideoId,video.Title)">
+                                </div>
+                                <div class="col-10">
+                                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-6">
+                <p class="text-center">No videos found.</p>
+            </div>
+        }
+    </div>
+</div> *@
+@* <div class="container min-vh-100 pt-5">
+	<div class="row justify-content-center pt-5">
+		<div class="col-md-6">
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" @bind="searchString">
+				<button class="btn-main btn-main-fill" type="button" id="button-addon2" @onclick="SearchPlaylist"><i class="fas fa-search"></i></button>
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center pt-3">
+		<div class="col-md-6">
+			<div class="row align-items-center">
+				<div class="col">
+					<input type="text" class="form-control" placeholder="Add Title" @bind="title">
+				</div>
+				<div class="col-auto">
+					<button type="button" class="post-btn post-btn-fill" @onclick="CreatePlaylist">Create Playlist</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row justify-content-center pt-4">
+		@if (playlist.Count > 0)
+		{
+			@foreach (var video in playlist)
+			{
+				<div class="col-md-6">
+					<div class="card border-danger mb-3">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-2 d-flex flex-column justify-content-center">
+									<input type="checkbox" name="selectSongs" value="@video.VideoId, @video.Title,@video.ThumbnailUrl" id="@video.VideoId" @onchange="() => ToggleSelection(video.VideoId,video.Title)">
+								</div>
+								<div class="col-10">
+									<iframe width="100%" height="315" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<div class="col-md-6">
+				<p class="text-center">No videos found.</p>
+			</div>
+		}
+	</div>
+</div>
+
+
+
+@code {
+	private string searchString = "";
+	private string title = "";
+
+	private List<YoutubeSearchResult> playlist = new List<YoutubeSearchResult>();
+	private List<SongDRequestTO> selectedVideoIds = new List<SongDRequestTO>();
+
+	public class YoutubeSearchResult
+	{
+		public string Title { get; set; }
+		public string Description { get; set; }
+		public string ThumbnailUrl { get; set; }
+		public string VideoId { get; set; }
+		public string ChannelTitle { get; set; }
+	}
+
+	public class PlaylistRequestDTO
+	{
+		public List<SongDRequestTO> VideoList { get; set; }
+		public string Title { get; set; }
+	}
+
+	public class SongDRequestTO
+	{
+		public string VideoId { get; set; }
+
+		public string Title { get; set; }
+	}
+
+
+	private async Task SearchPlaylist()
+	{
+		var url = $"playlist/search-songs?songName={Uri.EscapeDataString(searchString)}";
+		playlist = await _apiService.CallApiAsync<List<YoutubeSearchResult>>(url, HttpMethod.Get);
+	}
+
+
+	private async Task CreatePlaylist()
+	{
+		PlaylistRequestDTO playlist = new PlaylistRequestDTO()
+			{
+				Title = title,
+				VideoList = selectedVideoIds
+			};
+		var url = "playlist/create-playlist";
+		var res = await _apiService.CallApiAsync<string>(url, HttpMethod.Post, playlist);
+
+	}
+
+	private void ToggleSelection(string videoId, string title)
+	{
+		var selectedVideo = selectedVideoIds.FirstOrDefault(v => v.VideoId == videoId);
+		if (selectedVideo != null)
+		{
+			selectedVideoIds.Remove(selectedVideo);
+		}
+		else
+		{
+			selectedVideoIds.Add(new SongDRequestTO { VideoId = videoId, Title = title });
+		}
+	}
+
+} *@
+@page "/playlist"
+@using EventSpaceUI.Client.Utilities
+@inject HttpClient HttpClient
+@inject IApiService _apiService
+
+<div class="container min-vh-100 pt-5">
+	<div class="row justify-content-center pt-5">
+		<div class="col-md-6">
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" @bind="searchString">
+				<button class="btn-main btn-main-fill" type="button" id="button-addon2" @onclick="SearchPlaylist"><i class="fas fa-search"></i></button>
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center pt-3">
+		<div class="col-md-6">
+			<div class="row align-items-center">
+				<div class="col">
+					<input type="text" class="form-control" placeholder="Add Title" @bind="title">
+				</div>
+				@* <div class="col-auto">
+				<button type="button" class="post-btn post-btn-fill" @onclick="CreatePlaylist">Create Playlist</button>
+				</div> *@
+				<div class="col-auto">
+					<button type="button" class="post-btn post-btn-fill" @onclick="@(async () => { await CreatePlaylist(); NavigateToPost(); })">Create Playlist</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="row justify-content-center pt-4">
+		@if (playlist != null && playlist.Any())
+		{
+			@foreach (var video in playlist)
+			{
+				<div class="col-md-6">
+					<div class="card border-danger mb-3">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-2 d-flex flex-column justify-content-center">
+									<input type="checkbox" name="selectSongs" value="@video.VideoId, @video.Title,@video.ThumbnailUrl" id="@video.VideoId" @onchange="() => ToggleSelection(video.VideoId,video.Title)">
+								</div>
+								<div class="col-10">
+									<iframe width="100%" height="315" src="https://www.youtube.com/embed/@video.VideoId" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<div class="col-md-6">
+				<p class="text-center">No videos found.</p>
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	private string searchString = "";
+	private string title = "";
+
+	private List<YoutubeSearchResult> playlist = new List<YoutubeSearchResult>();
+	private List<SongDRequestTO> selectedVideoIds = new List<SongDRequestTO>();
+
+	public class YoutubeSearchResult
+	{
+		public string Title { get; set; }
+		public string Description { get; set; }
+		public string ThumbnailUrl { get; set; }
+		public string VideoId { get; set; }
+		public string ChannelTitle { get; set; }
+	}
+
+	public class PlaylistRequestDTO
+	{
+		public List<SongDRequestTO> VideoList { get; set; }
+		public string Title { get; set; }
+	}
+
+	public class SongDRequestTO
+	{
+		public string VideoId { get; set; }
+		public string Title { get; set; }
+	}
+
+	private async Task SearchPlaylist()
+	{
+		try
+		{
+			var url = $"playlist/search-songs?songName={Uri.EscapeDataString(searchString)}";
+			playlist = await _apiService.CallApiAsync<List<YoutubeSearchResult>>(url, HttpMethod.Get);
+		}
+		catch (Exception ex)
+		{
+			// Handle exception or log error
+			Console.WriteLine($"Error occurred during playlist search: {ex.Message}");
+			// Optionally, you can display an error message to the user
+			// errorMessage = "An error occurred while searching for songs. Please try again later.";
+		}
+	}
+
+	private async Task CreatePlaylist()
+	{
+		try
+		{
+			PlaylistRequestDTO playlistRequest = new PlaylistRequestDTO()
+				{
+					Title = title,
+					VideoList = selectedVideoIds
+				};
+
+			var url = "playlist/create-playlist";
+			var res = await _apiService.CallApiAsync<string>(url, HttpMethod.Post, playlistRequest);
+		}
+		catch (Exception ex)
+		{
+			// Handle exception or log error
+			Console.WriteLine($"Error occurred while creating playlist: {ex.Message}");
+			// Optionally, you can display an error message to the user
+			// errorMessage = "An error occurred while creating the playlist. Please try again later.";
+		}
+	}
+
+	private void ToggleSelection(string videoId, string title)
+	{
+		var selectedVideo = selectedVideoIds.FirstOrDefault(v => v.VideoId == videoId);
+		if (selectedVideo != null)
+		{
+			selectedVideoIds.Remove(selectedVideo);
+		}
+		else
+		{
+			selectedVideoIds.Add(new SongDRequestTO { VideoId = videoId, Title = title });
+		}
+	}
+	[Inject]
+	private NavigationManager NavigationManager { get; set; }
+
+
+
+
+	
+
+	private void NavigateToPost()
+	{
+		NavigationManager.NavigateTo("/postindex");
+	}
+}
+

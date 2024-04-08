@@ -55,6 +55,9 @@
                         <h5>Location</h5>
                         <h5>@Event.Venue</h5>
                     </div>
+                    <button id="payment-button" class="btn-main btn-main-outline" data-bs-dismiss="modal">Pay with Khalti 12 </button>
+
+
                 </div>
             </div>
         </div>
@@ -81,3 +84,47 @@
         NavigationManager.NavigateTo($"/ticket/{tierId}");
     }
 }
+
+
+
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+
+
+<script>
+
+    var total;
+    var config = {
+        "publicKey": "test_public_key_574a5a24871b4ce99f519e96d3c23629",
+        "productIdentity": "1234567890",
+        "productName": "Dragon",
+        "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+        "paymentPreference": [
+            "KHALTI",
+            "EBANKING",
+            "MOBILE_BANKING",
+            "CONNECT_IPS",
+            "SCT",
+        ],
+        "eventHandler": {
+            onSuccess(payload) {
+                console.log(payload);
+            },
+            onError(error) {
+                console.log(error);
+            },
+            onClose() {
+                console.log('widget is closing');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function () {
+
+        checkout.show({ amount: 10000 });
+    }
+
+ 
+
+</script>

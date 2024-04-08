@@ -444,10 +444,11 @@
 					</button>
 				</div>
 				<div class="pb-3">
-					<button type="button" class="post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#playlistModal">
+					<button type="button" class="post-btn post-btn-fill w-100" @onclick="NavigateToPlaylistPage">
 						<i class="fas fa-music"></i> <span>Create playlist</span>
 					</button>
 				</div>
+
 			</div>
 			<div class="pt-5 pb-5">
 				<div class="divider mb-5"></div>
@@ -548,11 +549,11 @@
 		<!-- Sidebar -->
 		<div class="col-md-3 side-section p-5">
 			<div class="playlist border-gray">
-				<h4 class="playlist-text">My Playlist <i class="fas fa-music"></i></h4>
+				<h4 class="text-secondary">My Playlist <i class="fas fa-music"></i></h4>
 				<!-- My playlist content here -->
 			</div>
 			<div class="playlist border-gray mt-5">
-				<h2 class="text-secondary">My Photos <i class="bi bi-music-note-list"></i></h2>
+				<h4 class="text-secondary">My Photos <i class="fas fa-image"></i></h4>
 				<!-- My photos content here -->
 			</div>
 		</div>
@@ -592,15 +593,77 @@
 	</div>
 </div>
 
+<!-- Photo Modal -->
+<div class="modal fade " id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg--secondary">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Upload Image</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- Form for creating a blog -->
+				<form @onsubmit="UploadImage" enctype="multipart/form-data">
+					<div class="mb-3">
+						<label class="form-label">Caption</label>
+						<input class="form-control" placeholder="Caption" @bind="newPhoto.Caption" required />
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Tags</label>
+						<input class="form-control" placeholder="Tags" @bind="newPhoto.Caption" required></input>
+					</div>
+					<div class="mb-3">
+						<label for="photo" class="form-label">Upload Image</label>
+						<InputFile OnChange="@OnInputFileChange" class="form-control" id="fileUpload" />
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Upload</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Playlist Modal -->
+@* <div class="modal fade" id="playlistModal" aria-hidden="true" aria-labelledby="playListModalLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content   bg--secondary">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="playlistModalLabel">Find songs</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form method="Post" asp-controller="Post" asp-action="SearchResult">
+					<div class="input-group">
+						<input type="text" name="query" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" />
+						<button class="btn btn-dark" type="submit" id="button-addon2"><i class="fas fa-search"></i> </button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div> *@
+
 @code {
 	private List<Blog> blogs;
 	private Blog newBlog = new Blog();
-
+	private List<Photo> photos;
+	private Photo newPhoto = new Photo();
 
 	public class Blog
 	{
 		public string Title { get; set; }
 		public string Content { get; set; }
+		public string PhotoName { get; set; }
+	}
+
+	public class Photo
+	{
+		public string Caption { get; set; }
+		public string Tags { get; set; }
 		public string PhotoName { get; set; }
 	}
 
@@ -612,6 +675,11 @@
 	private async Task LoadBlogs()
 	{
 		blogs = await _apiService.CallApiAsync<List<Blog>>("Blog/GetAllBlogs", HttpMethod.Get);
+	}
+
+	private async Task LoadImage()
+	{
+		photos = await _apiService.CallApiAsync<List<Photo>>("Photo/GetAllPhotos", HttpMethod.Get);
 	}
 
 	private async Task CreateBlog()
@@ -630,6 +698,27 @@
 
 		// Reset new blog object
 		newBlog = new Blog();
+
+		// Close modal
+		// await JSRuntime.InvokeVoidAsync("hideModal", "blogModal");
+	}
+
+	private async Task UploadImage()
+	{
+		// Upload photo if available
+		if (!string.IsNullOrEmpty(newPhoto.PhotoName))
+		{
+			await UploadPhoto();
+		}
+
+		// Call API to create blog
+		await _apiService.CallApiAsync<Photo>("Photo/insertPic", HttpMethod.Post, newPhoto);
+
+		// Refresh blogs after creating a new one
+		await LoadImage();
+
+		// Reset new blog object
+		newPhoto = new Photo();
 
 		// Close modal
 		// await JSRuntime.InvokeVoidAsync("hideModal", "blogModal");
@@ -656,6 +745,14 @@
 		var buffer = new byte[file.Size];
 		await file.OpenReadStream().ReadAsync(buffer);
 		newBlog.PhotoName = Convert.ToBase64String(buffer);
+	}
+
+	[Inject]
+	private NavigationManager NavigationManager { get; set; }
+
+	private void NavigateToPlaylistPage()
+	{
+		NavigationManager.NavigateTo("/playlist");
 	}
 }
 
