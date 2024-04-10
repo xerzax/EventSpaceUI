@@ -25,4 +25,8 @@
 	  <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
 	  <None Include="wwwroot\css\open-iconic\README.md" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Pages\Organizer\" />
+	</ItemGroup>
 </Project>

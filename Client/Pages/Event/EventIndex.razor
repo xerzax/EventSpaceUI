@@ -1,171 +1,85 @@
-﻿@* @page "/eventindex"
-
+﻿@page "/eventindex"
 @using EventSpaceUI.Client.Utilities
 @using static EventSpaceUI.Client.Pages.Event.EventForm
 @inject IApiService _apiService
 
-
-
 <div class="container pt-lg-4">
-	<div class="row justify-content-between event-heading">
-		<div class="col-0 col-md-6 mb-2 mt-5">
-			<img src="/images/Poster.jpeg" style=" width:100%;height:350px" />
-		</div>
-		<div class="col-0 col-md-6 mt-5">
-			<img src="/images/Music Poster Template Vinyl Record Template Download on Pngtree.jpeg" style="width:100%;height:350px" />
-		</div>
+    <div class="row justify-content-between event-heading">
+        <div class="col-0 col-md-6 mb-2 mt-5">
+            <img src="/images/Poster.jpeg" style=" width:100%;height:350px" />
+        </div>
+        <div class="col-0 col-md-6 mt-5">
+            <img src="/images/Music Poster Template Vinyl Record Template Download on Pngtree.jpeg" style="width:100%;height:350px" />
+        </div>
 
-		<div class="event-text d-none d-md-block">
-			View Events
-		</div>
-	</div>
+        <div class="event-text d-none d-md-block">
+            View Events
+        </div>
+    </div>
 
-	<div class="row pt-5">
-		<h2 class="pt-2 pb-4">Events</h2>
+    <div class="row pt-5">
+        <h2 class="pt-2 pb-4">Events</h2>
 
-		@if (Events.Count > 0)
-		{
-
-			@foreach (var obj in Events)
-			{
-				<div class="col-12 col-md-4">
-					<div class="event-card">
-						<img src="/images/lanadidi.jpeg">
-						<div class="event-details d-flex">
-							<div class="evt-date pe-4">
-								<div class="fs--heading-2">@obj.Date.ToString("ddd")</div>
-								<div>@obj.Date.ToString("MMMM dd")</div>
-							</div>
-							<div class="ps-4">
-								<p><span class="text-secondary pe-1">Artist</span> @obj.Artist</p>
-								<p><span class="text-secondary pe-1">Location</span> @obj.Venue</p>
-								<p><span class="text-secondary pe-1">Seats</span>@obj.TotalSeats</p>
-							</div>
-						</div>
-						<div class="d-flex justify-content-between align-items-center mt-3">
-							<div class="evt-btn btn-main-fill btn-main">Paid</div>
-							<a href="#" class="wishlist-btn btn-main-outline btn-main">
-								<i class="t-secondary fas fa-bookmark"></i>
-							</a>
-						</div>
-
-					</div>
-				</div>
-			}
-		}
-	</div>
+        @if (Events != null && Events.Count > 0)
+        {
+            @foreach (var obj in Events)
+            {
+                <div class="col-12 col-md-4" @onclick="() => NavigateToEventView(obj.Id)">
+                    <div class="event-card">
+                        @if (!string.IsNullOrEmpty(obj.EventPhoto))
+                        {
+                            var imageUrl = $"https://localhost:7060/uploads/event/{obj.EventPhoto}";
+                            <img src="@imageUrl" class="card-img-top" />
+                        }
+                        else
+                        {
+                            <img src="/images/lanadidi.jpeg" class="card-img-top" alt="Default Event Photo" />
+                        }
+                        <div class="event-details d-flex">
+                            <div class="evt-date pe-4">
+                                <div class="fs--heading-2">@obj.Date.ToString("ddd")</div>
+                                <div>@obj.Date.ToString("MMMM dd")</div>
+                            </div>
+                            <div class="ps-4 details">
+                                <p><span class="text-secondary pe-1"></span> @obj.Name</p>
+                                <p><span class="text-secondary pe-1">Artist</span> @obj.Artist</p>
+                                <p><span class="text-secondary pe-1">Location</span> @obj.Venue</p>
+                                <p><span class="text-secondary pe-1">Seats</span>@obj.TotalSeats</p>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="evt-btn btn-main-fill btn-main">Paid</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No events found.</p>
+        }
+    </div>
 </div>
 
-
 @code {
-	private List<EventResponseDTO> Events = new List<EventResponseDTO>();
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
 
-	protected override async Task OnInitializedAsync()
-	{
-		var endpoint = "Event/GetAllEvents";
-		Events = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
+    private List<EventResponseDTO> Events = new List<EventResponseDTO>();
 
-	}
-}
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEvents();
+    }
 
-	@* <div class="row">
-	@foreach (var evt in Events)
-	{
-	<div class="col-md-4 mb-4 mt-5">
-	<div class="card border-0 shadow-sm">
-	<div class="position-relative">
-	<img class="card-img-top" src="images/login.jpg" alt="Event Image">
-	<div class="overlay bg-dark"></div>
-	<div class="position-absolute top-0 start-0 px-3 py-2">
-	<span class="fas fa-award text-warning"></span>
-	</div>
-	</div>
-	<div class="card-body text-white">
-	<h5 class="card-title">@evt.Name</h5>
-	<p class="card-text mb-2">Venue: @evt.Venue</p>
-	<p class="card-text mb-2">Date: @evt.Date.ToShortDateString()</p>
-	<p class="card-text mb-2">Artist: @evt.Artist</p>
-	<p class="card-text mb-2">Starting Price: @evt.StartingPrice</p>
-	<p class="card-text">Total Seats: @evt.TotalSeats</p>
-	</div>
-	<div class="card-footer border-0">
-	<a href="/ticket" class="btn btn-danger rounded-pill mb-1">Book Now</a>
-	</div>
-	</div>
-	</div>
-	}
-	</div> *@
-@page "/eventindex"
+    private async Task LoadEvents()
+    {
+        var endpoint = "Event/GetAllEvents";
+        Events = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
+    }
 
-@using EventSpaceUI.Client.Utilities
-@using static EventSpaceUI.Client.Pages.Event.EventForm
-@inject IApiService _apiService
-
-
-
-<div class="container pt-lg-4">
-	<div class="row justify-content-between event-heading">
-		<div class="col-0 col-md-6 mb-2 mt-5">
-			<img src="/images/Poster.jpeg" style=" width:100%;height:350px" />
-		</div>
-		<div class="col-0 col-md-6 mt-5">
-			<img src="/images/Music Poster Template Vinyl Record Template Download on Pngtree.jpeg" style="width:100%;height:350px" />
-		</div>
-
-		<div class="event-text d-none d-md-block">
-			View Events
-		</div>
-	</div>
-
-	<div class="row pt-5">
-		<h2 class="pt-2 pb-4">Events</h2>
-
-		@if (Events.Count > 0)
-		{
-
-			@foreach (var obj in Events)
-			{
-				<div class="col-12 col-md-4" @onclick="() => NavigateToEventView(obj.Id)">
-					<div class="event-card">
-						<img src="/images/lanadidi.jpeg">
-						<div class="event-details d-flex">
-							<div class="evt-date pe-4">
-								<div class="fs--heading-2">@obj.Date.ToString("ddd")</div>
-								<div>@obj.Date.ToString("MMMM dd")</div>
-							</div>
-							<div class="ps-4 details">
-								<p><span class="text-secondary pe-1"></span> @obj.Name</p>
-								<p><span class="text-secondary pe-1">Artist</span> @obj.Artist</p>
-								<p><span class="text-secondary pe-1">Location</span> @obj.Venue</p>
-								<p><span class="text-secondary pe-1">Seats</span>@obj.TotalSeats</p>
-							</div>
-						</div>
-						<div class="d-flex justify-content-between align-items-center mt-3">
-							<div class="evt-btn btn-main-fill btn-main">Paid</div>
-						</div>
-
-					</div>
-				</div>
-			}
-		}
-	</div>
-</div>
-
-
-@code {
-	[Inject]
-	private NavigationManager NavigationManager { get; set; }
-
-	private void NavigateToEventView(int eventId)
-	{
-		NavigationManager.NavigateTo($"/eventview/{eventId}");
-	}
-	private List<EventResponseDTO> Events = new List<EventResponseDTO>();
-
-	protected override async Task OnInitializedAsync()
-	{
-		var endpoint = "Event/GetAllEvents";
-		Events = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
-
-	}
+    private void NavigateToEventView(int eventId)
+    {
+        NavigationManager.NavigateTo($"/eventview/{eventId}");
+    }
 }

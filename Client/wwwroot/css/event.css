@@ -81,8 +81,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     margin-bottom: 25px;
     border-radius: 0.5rem;
     color: #C5C6C7;
-    height: 400px;
-    font-size: 1.4rem;
+    height: 440px;
+    font-size: 1.2rem;
     cursor: pointer;
 }
 .divider {
@@ -121,5 +121,5 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 }
 
 .details p{
-    font-size: 16px;
+    font-size: 14px;
 }

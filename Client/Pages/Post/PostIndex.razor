@@ -1,427 +1,10 @@
 ﻿@page "/postindex"
 @using EventSpaceUI.Client.Utilities
 @using System.Text
+@using System.Security.Claims
 @inject HttpClient HttpClient
 @inject IApiService _apiService
 @inject HttpClient Http
-
-@* <div class="container-fluid p-4 mt-5">
-
-	<div class="row pb-5 ">
-		<div class="col-md-3 side-section p-5 pt-5">
-
-			<div>
-				<div class="divider mt-2 mb-2"></div>
-
-				<h2 class=" fs--heading-2"><i class="fas fa-rocket pe-3"></i><span>EventSpace</span></h2>
-				<div class="divider mt-2 mb-2"></div>
-
-
-			</div>
-			<div class="pt-5 ">
-
-				<div class="pb-3">
-					<button type="button" class="post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#photoModal">
-						<i class="fas fa-upload"></i> <span>Upload photo</span>
-					</button>
-				</div>
-
-
-				<div class="pb-3">
-
-					<button type="button" class=" post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#blogModal">
-						<i class="fas fa-pen"></i> <span>Write blog</span>
-					</button>
-
-				</div>
-				<div class="pb-3">
-					<button type="button" class=" post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#playlistModal">
-						<i class="fas fa-music"></i> <span>Create playlist</span>
-					</button>
-
-				</div>
-			</div>
-
-			<div class="pt-5 pb-5">
-
-				<div class="divider mb-5"></div>
-				<div class="divider mt-5"></div>
-			</div>
-		</div>
-
-		<div class="col-md-6 ps-5 pe-5 pb-5 main-section border-gray">
-
-			<ul class="nav nav-tabs nav-tabs-custom mt-4" id="myTab" role="tablist">
-				<li class="nav-item nav-item-custom" role="presentation">
-					<button class="nav-link nav-link-custom active" id="photo-tab" data-bs-toggle="tab" data-bs-target="#photo-tab-pane" type="button" role="tab" aria-controls="photo-tab-pane" aria-selected="true">Photo</button>
-				</li>
-				<li class="nav-item nav-item-custom" role="presentation">
-					<button class="nav-link nav-link-custom" id="blog-tab" data-bs-toggle="tab" data-bs-target="#blog-tab-pane" type="button" role="tab" aria-controls="blog-tab-pane" aria-selected="false"> Blog</button>
-				</li>
-				<li class="nav-item nav-item-custom" role="presentation">
-					<button class="nav-link nav-link-custom" id="playlist-tab" data-bs-toggle="tab" data-bs-target="#playlist-tab-pane" type="button" role="tab" aria-controls="Playlist-tab-pane" aria-selected="false">Playlist</button>
-				</li>
-
-			</ul>
-			<div class="tab-content pt-4" id="myTabContent">
-				<div class="tab-pane fade show active" id="photo-tab-pane" role="tabpanel" aria-labelledby="photo-tab" tabindex="0"> *@
-					@* @foreach (var obj in Model.Photolist)
-					{
-					<div class="card card-custom  mb-5 w-80  border-gray" onclick="location.href='@Url.Action("ViewPhoto", "Post", new { id = obj.Id })'">
-					@if (!string.IsNullOrEmpty(obj.PhotoName))
-					{
-					<img src="/Uploads/@obj.PhotoName" class="card-img-top" />
-
-
-					}
-					else
-					{
-					<img src="~/images/default.jpg" class="card-img-top" />
-
-					}
-					<div class="card-body">
-
-					<p>
-					<h2 class="card-title">@obj.Title</h2>
-
-					</p>
-					<p class="card-text">
-					<small class="text-secondary">
-					Added date
-					@obj.CreatedAt.ToShortDateString()
-					</small>
-					</p>
-					<p class="card-text">
-					<small class="text-secondary">
-					@{
-					var user = await UserManager.FindByIdAsync(obj.UserId);
-					var name = user.FirstName;
-					}
-					Added by @name
-					</small>
-					</p>
-					<p>
-					@if (obj.UserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
-					{
-					<a href="@Url.Action("DeletePhoto", "Post", new { id = obj.Id })" class="btn-main btn-main-fill">Delete</a>
-
-					}
-					</p>
-					</div>
-					</div>
-
-					} *@
-			@* 	</div>
-				<div class="tab-pane fade" id="blog-tab-pane" role="tabpanel" aria-labelledby="blog-tab" tabindex="0"> *@
-
-					@*   @foreach (var obj in Model.BlogList)
-					{
-					<div class="card card-custom mb-5 w-80  border-gray" onclick="location.href='@Url.Action("ViewBlog", "Post", new { id = obj.Id })'">
-					@if (!string.IsNullOrEmpty(obj.PhotoName))
-					{
-					<img src="/Uploads/@obj.PhotoName" class="card-img-top" />
-
-
-					}
-					else
-					{
-					<img src="~/images/default.jpg" class="card-img-top" />
-
-					}
-
-
-					<div class="card-body">
-					<p>
-					<h2 class="card-title">@obj.Title</h2>
-
-					</p>
-					<p class="card-text">
-					@obj.Content
-					</p>
-					<p class="card-text">
-					<small class="text-secondary">
-					Added date
-					@obj.CreatedAt.ToShortDateString()
-
-					</small>
-					</p>
-					<p class="card-text">
-					<small class="text-secondary">
-					@{
-					var user = await UserManager.FindByIdAsync(obj.UserId);
-					var name = user.FirstName;
-					}
-					Added by @name
-					</small>
-					</p>
-					</div>
-
-					</div>
-					}
-					*@
-@* 				</div>
-				<div class="tab-pane fade" id="playlist-tab-pane" role="tabpanel" aria-labelledby="contplaylistact-tab" tabindex="0"> *@
-					@* @foreach (var obj in Model.Playlist)
-					{
-
-
-					<div class="card card-custom  mb-5 w-80  border-gray" onclick="location.href='@Url.Action("ViewPlayList", "Post", new { id = obj.Id })'">
-					<img src="~/images/default.jpg" class="card-img-top" />
-					<img src="PhotoName" class="card-img-top" />
-
-					<div class="card-body">
-						<p>
-							<h2 class="card-title">Title</h2>
-
-						</p>
-						<div class="text-danger ">Playlist</div>
-						<p class="card-text">
-							<small class="text-secondary">
-								Added date
-								CreatedAt.ToShortDateString()
-
-
-							</small>
-						</p>
-						<p class="card-text">
-							<small class="text-secondary">
-								@{
-									var user = await UserManager.FindByIdAsync(obj.UserId);
-									var name = user.FirstName;
-								}
-								Added by @name
-							</small>
-						</p>
-					</div>
-				</div>
-				}
- *@
-	@* 		</div>
-		</div>
-
-
-
-
-
-	</div>
-	<div class=" col-md-3 side-section p-5">
-
-		<div class="playlist border-gray">
-
-			<h4 class="playlist-text">My Playlist <i class="fas fa-music"></i></h4> *@
-			@* @foreach (var obj in Model.UserPlaylist)
-			{
-			<div class="d-flex justify-content-between">
-			<a class="text-white pt-2" asp-controller="Post" asp-action="ViewPlaylist" asp-route-id="@obj.Id"># @obj.Title</a>
-			</div>
-
-
-
-
-
-			}
-			</div>
-			<div class="playlist border-gray mt-5">
-
-			<h2 class="text-secondary">My Photos <i class="bi bi-music-note-list"></i></h2>
-			@foreach (var obj in Model.Photolist)
-			{
-
-			<div class="d-flex  row ">
-			<div class="col-6">
-			<img src="/Uploads/@obj.PhotoName" style="height:50px; width:50px;object-fit:cover" />
-			</div>
-			</div>
-			} *@
-@* 		</div>
-
-
-	</div>
-</div>
- *@
-
-
-
-@* 
-<div class="modal fade " id="blogModal" tabindex="-1" aria-labelledby="blogModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content bg--secondary">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalLabel">Create blog</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form method="post" asp-controller="Post" asp-action="CreateBlog" enctype="multipart/form-data">
-					<div class="mb-3">	
-						<label class="form-label">Title</label>
-						<input class="form-control" asp-for="Title" placeholder="Title" type="text" required />
-						<span class="text-dark fs--xsmall" asp-validation-for="Title"></span>
-
-					</div>
-					<div class="mb-3">
-						<input type="file" class="form-control" asp-for="PhotoUrl" required />
-						<span class="text-dark fs--xsmall" asp-validation-for="PhotoUrl"></span>
-
-					</div>
-
-
-					<div class="mb-3">
-						<label class="form-label">Content</label>
-
-						<input class="form-control" asp-for="Content" placeholder="Content" type="text" id="editor" required />
-						<span class="text-dark fs--xsmall" asp-validation-for="Blogs.Content"></span>
-
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn-main btn-dark" data-bs-dismiss="modal">Close</button>
-						<button class="btn-main btn-dark" type="submit">Write blog</button>
-
-					</div>
-				</form>
-			</div>
-
-		</div>
-	</div>
-</div> *@
-@* 	<div class="modal fade" id="blogModal" tabindex="-1" aria-labelledby="blogModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content bg--secondary">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="exampleModalLabel">Create blog</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<!-- Form for creating a blog -->
-					<form @onsubmit="CreateBlog" enctype="multipart/form-data">
-						<div class="mb-3">
-							<label class="form-label">Title</label>
-							<input class="form-control" placeholder="Title" @bind="newBlog.Title" required />
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Content</label>
-							<input class="form-control" placeholder="Content" @bind="newBlog.Content" required />
-						</div>
-						<div class="mb-3">
-							<label for="photo" class="form-label">Upload Image</label>
-							<label for="fileUpload" class="form-label text-light">Upload Image</label>
-							<InputFile OnChange="@OnInputFileChange" class="form-control" id="fileUpload" />
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary">Create Blog</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
-<div class="modal fade " id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content bg--secondary">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalLabel">Upload Photo</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form method="post" asp-controller="Post" asp-action="UploadPhoto" enctype="multipart/form-data">
-					<div class="mb-3">
-						<label class="form-label">Title</label>
-						<input class="form-control" asp-for="Title" placeholder="Caption" ype="text" required />
-						<span class="text-dark fs--xsmall" asp-validation-for="Title"></span>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Tags</label>
-						<input class="form-control" asp-for="Tags" placeholder="Tags" ype="text" required />
-						<span class="text-dark fs--xsmall" asp-validation-for="Tags"></span>
-					</div>
-					<div class="mb-3">
-						<input type="file" class="form-control" asp-for="PhotoUrl" required />
-						<span class="text-dark fs--xsmall" asp-validation-for="PhotoUrl"></span>
-
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn-main btn-dark" data-bs-dismiss="modal">Close</button>
-						<button class="btn-main btn-dark" type="submit">Upload</button>
-
-
-					</div>
-
-
-				</form>
-			</div>
-
-		</div>
-	</div>
-</div>
-
-
-<div class="modal fade" id="playlistModal" aria-hidden="true" aria-labelledby="playListModalLabel" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content   bg--secondary">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="playlistModalLabel">Find songs</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form method="Post" asp-controller="Post" asp-action="SearchResult">
-					<div class="input-group">
-						<input type="text" name="query" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" />
-						<button class="btn btn-dark" type="submit" id="button-addon2"><i class="bi bi-search"></i> </button>
-					</div>
-
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-</div>
-
-
-
-
-@code {
-	private List<Blog> blogs;
-	private Blog newBlog = new Blog();
-
-	public class Blog
-	{
-		public string Title { get; set; }
-		public string Content { get; set; }
-		public string PhotoName { get; set; }
-	}
-
-	protected override async Task OnInitializedAsync()
-	{
-		blogs = await _apiService.CallApiAsync<List<Blog>>("Blog/GetAllBlogs", HttpMethod.Get);
-	}
-
-	private async Task CreateBlog()
-	{
-		var endpoint = "Blog/PostBlogs";
-		await _apiService.CallApiAsync<Blog>(endpoint, HttpMethod.Post, newBlog);
-		// Refresh blogs after creating a new one
-		blogs = await _apiService.CallApiAsync<List<Blog>>("Blog/GetAllBlogs", HttpMethod.Get);
-		newBlog = new Blog();
-	}
-
-	private async Task OnInputFileChange(InputFileChangeEventArgs e)
-	{
-		var file = e.File;
-		var stream = file.OpenReadStream(file.Size);
-		var fileContent = new MultipartFormDataContent();
-		fileContent.Add(new StreamContent(stream), "file", file.Name);
-		var response = await Http.PostAsync("https://localhost:7060/api/File/upload", fileContent);
-		if (response.IsSuccessStatusCode)
-		{
-			var uploadedFileName = await response.Content.ReadAsStringAsync();
-			newBlog.PhotoName = uploadedFileName;
-		}
-	}
-} *@
-
-
-
 
 <div class="container-fluid p-4 mt-5">
 	<!-- Sidebar -->
@@ -475,14 +58,15 @@
 			<div class="tab-content pt-4" id="myTabContent">
 				<!-- Photo Tab Content -->
 				<div class="tab-pane fade show active" id="photo-tab-pane" role="tabpanel" aria-labelledby="photo-tab" tabindex="0">
-					@* @if (photos != null && photos.Any())
+					@if (photos != null && photos.Any())
 					{
 						@foreach (var photo in photos)
 						{
 							<div class="card card-custom mb-5 w-80 border-gray">
 								@if (!string.IsNullOrEmpty(photo.PhotoName))
 								{
-									<img src="/Uploads/@photo.PhotoName" class="card-img-top" />
+									var imageUrl = $"https://localhost:7060/uploads/post/{@photo.PhotoName}";
+									<img src="@imageUrl" class="card-img-top" />
 								}
 								else
 								{
@@ -490,20 +74,27 @@
 								}
 								<div class="card-body">
 									<h2 class="card-title">@photo.Title</h2>
-									<p class="card-text">@photo.Content</p>
+									<p class="card-text">@photo.Tags</p>
 									<p class="card-text">
 										<small class="text-secondary">
-											Added date: 22nd November, 2023 @DateTime.Parse(blog.CreatedAt).ToShortDateString()
+											Added date: @photo.CreatedAt.ToString("MMMM dd, yyyy")
 										</small>
 									</p>
+									@* <button class="btn btn-primary" @onclick="() => FollowUser(photo.UserId)">Follow</button> *@
+									<div class="mt-4">
+										<h4>Add Comment</h4>
+										<textarea class="form-control" placeholder="Enter your comment"></textarea>
+										<button class="btn btn-primary mt-2">Add Comment</button>
+									</div>
+
 								</div>
 							</div>
 						}
 					}
 					else
 					{
-						<p class="text-muted"><em>No blogs found.</em></p>
-					} *@
+						<p class="text-muted"><em>No image found.</em></p>
+					}
 				</div>
 
 				<!-- Blog Tab Content -->
@@ -515,7 +106,8 @@
 							<div class="card card-custom mb-5 w-80 border-gray">
 								@if (!string.IsNullOrEmpty(blog.PhotoName))
 								{
-									<img src="/Uploads/@blog.PhotoName" class="card-img-top" />
+									var imageUrl = $"https://localhost:7060/uploads/blog/{@blog.PhotoName}";
+									<img src = "@imageUrl" class="card-img-top" />
 								}
 								else
 								{
@@ -526,9 +118,10 @@
 									<p class="card-text">@blog.Content</p>
 									<p class="card-text">
 										<small class="text-secondary">
-											Added date: 22nd November, 2023@*  @DateTime.Parse(blog.CreatedAt).ToShortDateString() *@
+											Added Date: @blog.CreatedAt.ToString("MMMM dd, yyyy")
 										</small>
 									</p>
+								@* 	<button class="btn btn-primary" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
 								</div>
 							</div>
 						}
@@ -581,7 +174,7 @@
 					</div>
 					<div class="mb-3">
 						<label for="photo" class="form-label">Upload Image</label>
-						<InputFile OnChange="@OnInputFileChange" class="form-control" id="fileUpload" />
+						<InputFile OnChange="@OnInputBlogUpload" class="form-control" id="fileUpload" />
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -606,15 +199,15 @@
 				<form @onsubmit="UploadImage" enctype="multipart/form-data">
 					<div class="mb-3">
 						<label class="form-label">Caption</label>
-						<input class="form-control" placeholder="Caption" @bind="newPhoto.Caption" required />
+						<input class="form-control" placeholder="Caption" @bind="newPhoto.Title" required />
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Tags</label>
-						<input class="form-control" placeholder="Tags" @bind="newPhoto.Caption" required></input>
+						<input class="form-control" placeholder="Tags" @bind="newPhoto.Tags" required></input>
 					</div>
 					<div class="mb-3">
 						<label for="photo" class="form-label">Upload Image</label>
-						<InputFile OnChange="@OnInputFileChange" class="form-control" id="fileUpload" />
+						<InputFile OnChange="@OnInputPhotoUpload" class="form-control" id="fileUpload" />
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -626,26 +219,6 @@
 	</div>
 </div>
 
-<!-- Playlist Modal -->
-@* <div class="modal fade" id="playlistModal" aria-hidden="true" aria-labelledby="playListModalLabel" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content   bg--secondary">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="playlistModalLabel">Find songs</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form method="Post" asp-controller="Post" asp-action="SearchResult">
-					<div class="input-group">
-						<input type="text" name="query" class="form-control" placeholder="Search songs" aria-label="Search songs" aria-describedby="button-addon2" />
-						<button class="btn btn-dark" type="submit" id="button-addon2"><i class="fas fa-search"></i> </button>
-					</div>
-
-				</form>
-			</div>
-		</div>
-	</div>
-</div> *@
 
 @code {
 	private List<Blog> blogs;
@@ -653,23 +226,41 @@
 	private List<Photo> photos;
 	private Photo newPhoto = new Photo();
 
+	// [Inject]
+	// private AuthenticationStateProvider _authenticationStateProvider { get; set; }
+
+	// [Inject]
+	// private ILocalStorageService _localStorageService { get; set; }
+
 	public class Blog
 	{
 		public string Title { get; set; }
 		public string Content { get; set; }
 		public string PhotoName { get; set; }
+		public DateTime CreatedAt { get; set; }
+		public string UserId { get; set; }
+
 	}
 
 	public class Photo
 	{
-		public string Caption { get; set; }
+		public string Title { get; set; }
 		public string Tags { get; set; }
 		public string PhotoName { get; set; }
+		public DateTime CreatedAt { get; set; }
+		public string UserId { get; set; }
 	}
+
+	public class Follow
+	{
+		public Guid UserId { get; set; }
+	}
+
 
 	protected override async Task OnInitializedAsync()
 	{
 		await LoadBlogs();
+		await LoadImage();
 	}
 
 	private async Task LoadBlogs()
@@ -684,68 +275,120 @@
 
 	private async Task CreateBlog()
 	{
-		// Upload photo if available
 		if (!string.IsNullOrEmpty(newBlog.PhotoName))
 		{
 			await UploadPhoto();
 		}
 
-		// Call API to create blog
 		await _apiService.CallApiAsync<Blog>("Blog/PostBlogs", HttpMethod.Post, newBlog);
-
-		// Refresh blogs after creating a new one
 		await LoadBlogs();
 
-		// Reset new blog object
-		newBlog = new Blog();
-
-		// Close modal
-		// await JSRuntime.InvokeVoidAsync("hideModal", "blogModal");
+		newBlog = new Blog();  
 	}
 
 	private async Task UploadImage()
 	{
-		// Upload photo if available
-		if (!string.IsNullOrEmpty(newPhoto.PhotoName))
-		{
-			await UploadPhoto();
-		}
-
-		// Call API to create blog
 		await _apiService.CallApiAsync<Photo>("Photo/insertPic", HttpMethod.Post, newPhoto);
 
-		// Refresh blogs after creating a new one
 		await LoadImage();
 
-		// Reset new blog object
 		newPhoto = new Photo();
 
-		// Close modal
-		// await JSRuntime.InvokeVoidAsync("hideModal", "blogModal");
 	}
 
-	private async Task UploadPhoto()
+	// public async Task FollowUser(string userId)
+	// {
+	// 	var convertedUserId = Guid.Parse(userId); // Convert string to Guid
+
+	// 	// Create a model object to send to the API
+	// 	var followRequest = new Follow { UserId = convertedUserId };
+
+		
+	// 		// Make an HTTP POST request to the API endpoint
+	// 		var response = await _apiService.CallApiAsync<Follow>("Follow/FollowUser", followRequest);
+		
+	// }
+
+	
+
+    private async Task UploadPhoto()
+    {
+        var fileContent = new MultipartFormDataContent();
+        fileContent.Add(new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(newBlog.PhotoName))), "file", "blogImage.jpg");
+        var response = await Http.PostAsync("https://localhost:7060/api/File/upload", fileContent);
+        if (response.IsSuccessStatusCode)
+        {
+          
+        }
+        else
+        {
+           
+        }
+    }
+
+	private async Task UploadPhotoForPost()
 	{
 		var fileContent = new MultipartFormDataContent();
-		fileContent.Add(new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(newBlog.PhotoName))), "file", "blogImage.jpg");
+		fileContent.Add(new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(newPhoto.PhotoName))), "file", "photo.jpg");
 		var response = await Http.PostAsync("https://localhost:7060/api/File/upload", fileContent);
 		if (response.IsSuccessStatusCode)
 		{
-			// Optionally, handle success
+
 		}
 		else
 		{
-			// Optionally, handle failure
+
 		}
 	}
 
-	private async Task OnInputFileChange(InputFileChangeEventArgs e)
-	{
-		var file = e.File;
-		var buffer = new byte[file.Size];
-		await file.OpenReadStream().ReadAsync(buffer);
-		newBlog.PhotoName = Convert.ToBase64String(buffer);
+    private async Task OnInputBlogUpload(InputFileChangeEventArgs e)
+    {
+        using var formData = new MultipartFormDataContent();
+
+        var file = e.File;
+
+        var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
+
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+		formData.Add(content: fileContent, name: "File", fileName: file.Name);
+
+		formData.Add(new StringContent("1"), "FilePath");
+
+		var response = await Http.PostAsync("https://localhost:7060/api/File/upload", formData);
+
+		if (response.IsSuccessStatusCode)
+		{
+			var uploadedResult = await response.Content.ReadAsStringAsync();
+
+			newBlog.PhotoName = uploadedResult ?? "";
+		}
 	}
+
+	private async Task OnInputPhotoUpload(InputFileChangeEventArgs e)
+	{
+		using var formData = new MultipartFormDataContent();
+
+		var file = e.File;
+
+		var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
+
+		fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+		formData.Add(content: fileContent, name: "File", fileName: file.Name);
+
+		formData.Add(new StringContent("3"), "FilePath");
+
+		var response = await Http.PostAsync("https://localhost:7060/api/File/upload", formData);
+
+		if (response.IsSuccessStatusCode)
+		{
+			var uploadedResult = await response.Content.ReadAsStringAsync();
+
+			newPhoto.PhotoName = uploadedResult ?? "";
+		}
+	}
+
 
 	[Inject]
 	private NavigationManager NavigationManager { get; set; }
@@ -755,14 +398,6 @@
 		NavigationManager.NavigateTo("/playlist");
 	}
 }
-
-
-
-
-
-
-
-
 
 <script>
 	ClassicEditor
@@ -778,6 +413,7 @@
 			console.error(error);
 		});
 </script>
+
 
 
 
