@@ -1,0 +1,91 @@
+﻿@page "/songs/{id}"
+@using EventSpaceUI.Client.Utilities
+@inject IApiService _apiService
+<div class="container p-5">
+
+
+	@if (Songs != null && Songs.Any())
+{
+    <div class="d-flex align-items-start row">
+        <div class="col-md-4">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                @foreach (var song in Songs)
+                {
+                    var isActive = song == Songs.First() ? "active" : ""; // Add active class only to the first video
+                    <button class="nav-link @isActive" id="v-pills-@song.Id-tab" data-bs-toggle="pill" data-bs-target="#v-pills-@song.Id" type="button" role="tab" aria-controls="v-pills-@song.Id" aria-selected="true">@song.Title</button>
+                }
+            </div>
+        </div>
+        <div class="col-md-8 p-3">
+            <div class="tab-content" id="v-pills-tabContent">
+                @foreach (var song in Songs)
+                {
+                    var isActive = song == Songs.First() ? "show active" : ""; // Add active class only to the first video
+                    <div class="tab-pane fade @isActive" id="v-pills-@song.Id" role="tabpanel" aria-labelledby="v-pills-@song.Id-tab">
+                        <iframe width="100%" height="315" src="https://www.youtube.com/embed/@song.VideoCode" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+}
+}
+</div>
+
+
+	@* <div class="row justify-content-center pt-4">
+	@if (Songs != null && Songs.Any())
+		{
+
+		@foreach (var video in Songs)
+			{
+				<div class="col-md-6">
+					<div class="card border-danger mb-3">
+						<div class="card-body">
+							<div class="row">
+								
+								<div class="col-12">
+								<h2>@video.Title</h2>
+									<iframe width="100%" height="315" src="https://www.youtube.com/embed/@video.VideoCode" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<div class="col-md-6">
+				<p class="text-center">No videos found.</p>
+			</div>
+		}
+		</div> *@
+
+@code {
+    private List<SongDTO> Songs = new List<SongDTO>();
+
+    public class SongDTO
+    {
+        public int Id { get; set; }
+        public string VideoCode { get; set; }
+        public string Title { get; set; }
+        public int PlaylistId { get; set; }
+        public string PlaylistTitle { get; set; }
+    }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            var endpoint = $"Playlist/GetSongsByPlaylist/{Id}";
+            Songs = await _apiService.CallApiAsync<List<SongDTO>>(endpoint, HttpMethod.Get);
+        }
+    }
+
+  
+}

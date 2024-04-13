@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 
 <PageTitle>Index</PageTitle>
 
@@ -363,6 +366,7 @@
 
 </div>
 @code {
+	
 	private bool isLargeFont = false;
 
 	private void ToggleFontSize()

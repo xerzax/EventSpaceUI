@@ -4,7 +4,8 @@
 @inject IApiService _apiService
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navManager
-@inject AuthenticationStateProvider AuthStateProvider
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="container-fluid p-0">
     <!----------------------- Login Container -------------------------->
@@ -64,12 +65,16 @@
     </div>
 </div>
 
+
+
 @code {
     private LoginModel loginModel = new LoginModel();
     private string loginResultMessage;
     private string token;
     private bool showPassword = false;
     private string passwordInputType = "password";
+    private ClaimsPrincipal User { get; set; }
+    private string Role = "";
 
     public class LoginModel
     {
@@ -84,25 +89,51 @@
         public string Token { get; set; }
     }
 
+
+
     private async Task LoginUser()
     {
         var endpoint = "Account/login";
         var response = await _apiService.Login(loginModel);
 
-        if (response == "Login successful")
+        if (response.message == "Login successful")
         {
-            // Login successful
-            loginResultMessage = response;
-            await ((CustomAuthStateProvider)AuthStateProvider).GetAuthenticationStateAsync();
 
-            navManager.NavigateTo("/eventindex");
+            loginResultMessage = response.message;
+            await ((CustomAuthStateProvider)AuthenticationStateProvider).GetAuthenticationStateAsync();
+
+            navManager.NavigateTo("/eventIndex");
+            // await jsRuntime.InvokeVoidAsync("toastr.success", "Login Successful!");
+
+
+            // var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            // User = authState.User;
+            // var roles = User.Claims
+            //     .Where(c => c.Type == ClaimTypes.Role)
+            //     .Select(c => c.Value)
+            //     .ToList();
+            // Role = roles.FirstOrDefault();
+
+            if (response.role == "Admin")
+            {
+
+                navManager.NavigateTo("/admin/dashboard");
+            }
+            else
+            {
+                navManager.NavigateTo("/eventIndex");
+
+            }
             await jsRuntime.InvokeVoidAsync("toastr.success", "Login Successful!");
-            // Retrieve the token from the service
+
+    
+
+       
         }
         else
         {
             // Login failed
-            loginResultMessage = response;
+            loginResultMessage = response.message;
             await jsRuntime.InvokeVoidAsync("toastr.error", "Login Failed", "Invalid Login");
         }
     }

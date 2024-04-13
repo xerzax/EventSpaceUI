@@ -8,7 +8,7 @@ namespace EventSpaceUI.Client.Utilities
         Task<T> CallApiAsync<T>(string url, HttpMethod method, object data = null);
         Task<T> CallApiAsyncForm<T>(string url, HttpMethod method, object data = null);
 
-        Task<string> Login(LoginModel model);
+        Task<(string message, string role)> Login(LoginModel model);
         Task<string> Register(RegisterModel registerModel);
     }
 }

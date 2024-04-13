@@ -1,4 +1,5 @@
 ﻿@page "/postindex"
+
 @using EventSpaceUI.Client.Utilities
 @using System.Text
 @using System.Security.Claims
@@ -83,8 +84,10 @@
 									@* <button class="btn btn-primary" @onclick="() => FollowUser(photo.UserId)">Follow</button> *@
 									<div class="mt-4">
 										<h4>Add Comment</h4>
-										<textarea class="form-control" placeholder="Enter your comment"></textarea>
-										<button class="btn btn-primary mt-2">Add Comment</button>
+										<textarea class="form-control" placeholder="Enter your comment" @bind=comment></textarea>
+										<button class="btn btn-primary mt-2" @onclick="() => PostComment(photo.Id,1)">Add Comment</button>
+
+
 									</div>
 
 								</div>
@@ -134,7 +137,30 @@
 
 				<!-- Playlist Tab Content -->
 				<div class="tab-pane fade" id="playlist-tab-pane" role="tabpanel" aria-labelledby="playlist-tab" tabindex="0">
-					<!-- Playlist content here -->
+					@if (playlists != null && playlists.Any())
+					{
+						@foreach (var playlist in playlists)
+						{
+							<div class="card card-custom mb-5 w-80 border-gray">
+							
+									<img src="/images/Weeknd.jpeg" class="card-img-top" />
+								
+								<div class="card-body">
+									<h2 class="card-title">@playlist.Title</h2>
+									<p class="card-text">
+										<small class="text-secondary">
+											@* Added Date: @blog.CreatedAt.ToString("MMMM dd, yyyy") *@
+										</small>
+									</p>
+									@* 	<button class="btn btn-primary" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
+								</div>
+							</div>
+						}
+					}
+					else
+					{
+						<p class="text-muted"><em>No blogs found.</em></p>
+					}
 				</div>
 			</div>
 		</div>
@@ -222,9 +248,14 @@
 
 @code {
 	private List<Blog> blogs;
+	private List<Playlist> playlists;
+
 	private Blog newBlog = new Blog();
 	private List<Photo> photos;
 	private Photo newPhoto = new Photo();
+
+	private string comment = "";
+
 
 	// [Inject]
 	// private AuthenticationStateProvider _authenticationStateProvider { get; set; }
@@ -234,6 +265,8 @@
 
 	public class Blog
 	{
+		public int Id { get; set; }
+
 		public string Title { get; set; }
 		public string Content { get; set; }
 		public string PhotoName { get; set; }
@@ -244,11 +277,21 @@
 
 	public class Photo
 	{
+		public int Id { get; set; }
+
 		public string Title { get; set; }
 		public string Tags { get; set; }
 		public string PhotoName { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public string UserId { get; set; }
+	}
+
+	public class Playlist
+	{
+		public int Id { get; set; }
+		public string Title { get; set; }
+		public Guid UserId { get; set; }
+		public string UserName { get; set; }
 	}
 
 	public class Follow
@@ -261,6 +304,8 @@
 	{
 		await LoadBlogs();
 		await LoadImage();
+		await LoadPlaylist();
+
 	}
 
 	private async Task LoadBlogs()
@@ -271,6 +316,27 @@
 	private async Task LoadImage()
 	{
 		photos = await _apiService.CallApiAsync<List<Photo>>("Photo/GetAllPhotos", HttpMethod.Get);
+	}
+
+	private async Task LoadPlaylist()
+	{
+		playlists = await _apiService.CallApiAsync<List<Playlist>>("Playlist/GetAllPlaylist", HttpMethod.Get);
+	}
+
+	private async Task  PostComment(int id, int contentType)
+	{
+		var typeVal = "";
+		if(contentType == 1)
+		{
+			typeVal = "Photo";
+		}
+		var obj = new
+		{
+			PostId = id,
+			PostType = typeVal,
+			Content = comment
+		};
+		var res = await _apiService.CallApiAsync<Object>("Comment/PostComment", HttpMethod.Post, obj);
 	}
 
 	private async Task CreateBlog()
@@ -413,7 +479,3 @@
 			console.error(error);
 		});
 </script>
-
-
-
-

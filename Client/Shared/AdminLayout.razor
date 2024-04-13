@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+
+
+
+<div class="page bg-dark">
+	<div>
+		<h1>Hello</h1>
+	</div>
+	<main class="mt-5">
+
+		@Body
+	</main>
+	<div>
+		<FooterComponent />
+	</div>
+</div>

@@ -1,15 +1,51 @@
 ﻿@inherits LayoutComponentBase
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<div class="page bg-dark">
-	<div>
-		<NavMenu />
-	</div>
-	<main class="mt-5">
 
-		@Body
-	</main>
-	<div>
-		<FooterComponent />
+
+
+
+	<div class="page bg-dark">
+		<div >
+	
+	
+
+		<NavMenu />
+
+		</div>
+		<main class="mt-5">
+
+			@Body
+		</main>
+		<div>
+			<FooterComponent />
+		</div>
 	</div>
-</div>
+
+
+
+@* @code{
+	private ClaimsPrincipal User { get; set; }
+	private string Role = "";
+
+	protected override async Task OnInitializedAsync()
+	{
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		User = authState.User;
+		SetLayoutBasedOnUserRole();
+	}
+	private void SetLayoutBasedOnUserRole()
+	{
+		if (User != null && User.Identity.IsAuthenticated)
+		{
+			var roles = User.Claims
+				.Where(c => c.Type == ClaimTypes.Role)
+				.Select(c => c.Value)
+				.ToList();
+			Role = roles.FirstOrDefault();
+		}
+	}
+} *@
+	

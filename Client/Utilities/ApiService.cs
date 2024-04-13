@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace EventSpaceUI.Client.Utilities
 {
@@ -134,7 +135,7 @@ namespace EventSpaceUI.Client.Utilities
 		//    return "Invalid email or password.";
 		//}
 
-		public async Task<string> Login(LoginModel loginModel)
+		public async Task<(string message, string role)> Login(LoginModel loginModel)
 		{
 			var url = "Account/Login";
 			string fullUrl = $"{_baseUrl}/{url}";
@@ -154,13 +155,18 @@ namespace EventSpaceUI.Client.Utilities
 					await _localStorageService.SetItemAsync("token", loginResponse.Token);
 
 					_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Token);
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var token = tokenHandler.ReadJwtToken(loginResponse.Token);
+                    var roleClaim = token.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
 
-					return "Login successful";
-				}
+                    //return "Login successful";
+                    return ("Login successful", roleClaim);
+                }
 			}
 
-			return "Invalid email or password.";
-		}
+			//return "Invalid email or password.";
+            return ("Login successful", null);
+        }
 		public async Task<string> Register(RegisterModel registerModel)
         {
             var url = "Account/register";
