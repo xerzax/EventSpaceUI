@@ -1,0 +1,60 @@
+﻿@page "/allusers"
+@using EventSpaceUI.Client.Utilities
+@inject IApiService _apiService
+@layout AdminLayout
+
+
+
+<div class="container p-5">
+    <h2 class="custom-box bg--secondary text-primary mb-3">Users</h2>
+    <table class="table table-dark pt-4">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+@* 
+            @foreach (var obj in Model)
+            {
+                <tr>
+
+                    <td>@obj.FirstName</td>
+                    <td>@obj.LastName</td>
+                    <td>@obj.FirstName</td>
+                    <td>@obj.Email</td>
+                    @foreach (var role in obj.Roles)
+                    {
+                        <td>@role</td>
+                    }
+                    <td>
+                        @if (obj.User.EmailConfirmed == false)
+                        {
+                            <a class="btn btn-primary" asp-controller="Admin" asp-action="VerifyOrganizer" asp-route-id="@obj.User.Id">Verify</a>
+                        }
+                    </td>
+
+
+                </tr>
+
+            }
+ *@
+        </tbody>
+    </table>
+</div>
+
+@code{
+    // public class Model
+    // {
+    //     public string Name { get; set; }
+    //     public string Email { get; set; }
+    // }
+
+
+}

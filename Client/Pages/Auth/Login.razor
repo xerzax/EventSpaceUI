@@ -119,6 +119,9 @@
 
                 navManager.NavigateTo("/admin/dashboard");
             }
+            else if(response.role == "Organizer"){
+                navManager.NavigateTo("/organizer/dashboard");
+            }
             else
             {
                 navManager.NavigateTo("/eventIndex");

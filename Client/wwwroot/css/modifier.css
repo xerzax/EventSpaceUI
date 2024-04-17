@@ -19,6 +19,7 @@
     margin-left: 3rem;
 }
 
+
 /*.nav-link.active {
     background-color: var(--colorPrimarys1) !important;
     color: white;
@@ -182,13 +183,11 @@
 .padding-btm {
     padding-bottom: 8rem !important;
 }*/
-
-/* Change toolbar background color */
-/*.ck.ck-toolbar {
+    /* Change toolbar background color */
+    /*.ck.ck-toolbar {
     background-color: var(--colorSecondarys1);
 }*/
-
-/* Change toolbar button color */
-/*.ck.ck-button {
+    /* Change toolbar button color */
+    /*.ck.ck-button {
     color: var(--colorPrimarys1);
 }*/

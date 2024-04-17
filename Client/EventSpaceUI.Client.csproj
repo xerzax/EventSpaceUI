@@ -14,6 +14,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.24" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.24" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
 		<PackageReference Include="toastr" Version="2.1.1" />
@@ -25,9 +26,5 @@
 	  <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
 	  <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
 	  <None Include="wwwroot\css\open-iconic\README.md" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Pages\Organizer\" />
 	</ItemGroup>
 </Project>

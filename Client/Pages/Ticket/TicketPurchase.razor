@@ -1,0 +1,76 @@
+﻿@page "/ticketPurchase"
+@using EventSpaceUI.Client.Utilities
+@inject NavigationManager NavigationManager
+@inject IApiService _apiService
+
+
+<div class="container p-5">
+    <div class="row mt-5">
+        <p class="fs--heading-1">Your tickets/ticket have been sent to your email. Thank you!</p>
+        <img src="/images/bgimage.jpg" class="event-img mt-5" />
+    </div>
+</div>
+   
+
+@code {
+    protected override async Task OnInitializedAsync()
+
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+
+        var queryParameters = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        string status = queryParameters["status"];
+        string transactionType = queryParameters["t"];
+        string idx = queryParameters["idx"];
+        string token = queryParameters["token"];
+        string bankReference = queryParameters["bank_reference"];
+        string amount = queryParameters["amount"];
+        string mobile = queryParameters["mobile"];
+        string transactionId = queryParameters["transaction_id"];
+        string tidx = queryParameters["tidx"];
+        string totalAmount = queryParameters["total_amount"];
+        string purchaseOrderId = queryParameters["purchase_order_id"];
+        string purchaseOrderName = queryParameters["purchase_order_name"];
+        string pidx = queryParameters["pidx"];
+
+    
+        var ticketPurchaseData = new TicketPurchaseData
+            {
+                Status = status,
+                TransactionType = transactionType,
+                Idx = idx,
+                Token = token,
+                BankReference = bankReference,
+                Amount = amount,
+                Mobile = mobile,
+                TransactionId = transactionId,
+                Tidx = tidx,
+                TotalAmount = totalAmount,
+                PurchaseOrderId = purchaseOrderId,
+                PurchaseOrderName = purchaseOrderName,
+                Pidx = pidx
+            };
+
+        var endpoint = $"Ticket/Confirm/{ticketPurchaseData.PurchaseOrderId}";
+        var res = await _apiService.CallApiAsync<bool>(endpoint, HttpMethod.Post);
+
+    }
+
+    public class TicketPurchaseData
+    {
+        public string Status { get; set; }
+        public string TransactionType { get; set; }
+        public string Idx { get; set; }
+        public string Token { get; set; }
+        public string BankReference { get; set; }
+        public string Amount { get; set; }
+        public string Mobile { get; set; }
+        public string TransactionId { get; set; }
+        public string Tidx { get; set; }
+        public string TotalAmount { get; set; }
+        public string PurchaseOrderId { get; set; }
+        public string PurchaseOrderName { get; set; }
+        public string Pidx { get; set; }
+    }
+}

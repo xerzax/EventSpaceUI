@@ -1,0 +1,53 @@
+﻿@page "/allOrganizers"
+@using EventSpaceUI.Client.Utilities
+@inject IApiService _apiService
+@layout AdminLayout
+
+
+
+<div class="container p-5">
+    <h2 class="custom-box bg--secondary text-primary mb-3">Organizers</h2>
+    <table class="table table-dark pt-4">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Email</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @* @foreach (var obj in Model)
+            {
+                <tr>
+
+                    <td>@obj.User.FirstName</td>
+                    <td>@obj.User.LastName</td>
+                    <td>@obj.User.FirstName</td>
+                    <td>@obj.User.Email</td>
+                    <td>@obj.Role</td>
+                    <td>
+                        <a class="btn-main btn-main-fill" asp-controller="Admin" asp-action="OrganizedEvent" asp-route-id="@obj.User.Id">View events</a>
+                    </td>
+
+
+                </tr>
+
+            }
+ *@
+        </tbody>
+    </table>
+</div>
+
+@code {
+    // public class Model
+    // {
+    //     public string Name { get; set; }
+    //     public string Email { get; set; }
+    // }
+
+
+}

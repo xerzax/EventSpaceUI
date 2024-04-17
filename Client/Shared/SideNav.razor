@@ -1,0 +1,149 @@
+﻿@using EventSpaceUI.Client.Utilities
+@inject NavigationManager NavManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+
+<!-- Sidebar -->
+<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-black sidebar">
+    <div class="position-sticky">
+        <div class="sidebar-sticky">
+            <!-- Company Logo and Name -->
+            <div class="text-center py-4">
+                <a href="#" class="d-flex align-items-center justify-content-center">
+                    <img src="/images/eventlogo.png" alt="Company Logo" class="logo" style="width: 100px; height: 100px;" />
+                </a>
+            </div>
+
+            @if (role == "Admin")
+            {
+                
+            <!-- Navigation Links -->
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link @(NavManager.Uri.Contains("/admin/dashboard") ? "active" : "")" href="/admin/dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(NavManager.Uri.Contains("/eventdetails") ? "active" : "")" href="/eventdetails">
+                        <i class="fas fa-calendar-alt"></i>
+                        Events
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(NavManager.Uri.Contains("/allusers") ? "active" : "")" href="/allusers">
+                        <i class="fas fa-users"></i>
+                        All Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(NavManager.Uri.Contains("/allOrganizers") ? "active" : "")" href="/allOrganizers">
+                        <i class="fas fa-id-badge"></i>
+                        Organizers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(NavManager.Uri.Contains("/adminReport") ? "active" : "")" href="/adminReport">
+                        <i class="fas fa-file-alt"></i>
+                        Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link logout-link" @onclick="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+                </ul>
+            }
+            else if(role == "Organizer")
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link @(NavManager.Uri.Contains("/organizer/dashboard") ? "active" : "")" href="/organizer/dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(NavManager.Uri.Contains("/addevents") ? "active" : "")" href="/addevents">
+                            <i class="fas fa-calendar-alt"></i>
+                            Add Event
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(NavManager.Uri.Contains("/Organizer/report") ? "active" : "")" href="/Organizer/report">
+                            <i class="fas fa-file-alt"></i>
+                            Report
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(NavManager.Uri.Contains("/todo") ? "active" : "")" href="/todo">
+                            <i class="fas fa-check-square"></i>
+                            Todo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link logout-link" @onclick="Logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            }
+        </div>
+    </div>
+</nav>
+
+<style>
+    .nav-link {
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+       
+    }
+
+        .nav-link:hover {
+            background-color: darkred;
+        }
+
+        .nav-link.active {
+            background-color: darkred;
+        }
+
+    .logout-link:hover {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    window.onload = function () {
+        const currentUrl = window.location.href;
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navLinks.forEach(link => {
+            if (link.href === currentUrl) {
+                link.classList.add('active');
+            }
+        });
+    }
+</script>
+
+@code {
+
+    private string role = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        role = await LocalStorage.GetItemAsync<string>("role") ?? "";
+
+    }
+
+    async Task Logout()
+    {
+        Console.WriteLine("hello");
+        await LocalStorage.RemoveItemAsync("token");
+        ((CustomAuthStateProvider)AuthStateProvider).NotifyLogout();
+        NavManager.NavigateTo("/login");
+    }
+}

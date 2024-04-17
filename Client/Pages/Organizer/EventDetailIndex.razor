@@ -1,0 +1,86 @@
+﻿@page "/eventDetailOrganizer"
+@using EventSpaceUI.Client.Utilities
+@inject IApiService _apiService
+@layout AdminLayout
+
+<div class="container p-5">
+    <h2 class="custom-box bg--secondary text-primary mb-3">Events</h2>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Venue</th>
+                <th scope="col">Artist</th>
+                <th scope="col">Total Seats</th>
+                <th scope="col">Available Seats</th>
+                <th scope="col">Sold Seats</th>
+                <th scope="col">Amount raised</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Events.Select((value, index) => new { Value = value, Index = index + 1 }))
+            {
+                <tr class="row-border">
+                    <th scope="row">@obj.Index</th>
+                    <td>@obj.Value.Name</td>
+                    <td>@obj.Value.Date.ToShortDateString()</td>
+                    <td>@obj.Value.Venue</td>
+                    <td>@obj.Value.Artist</td>
+                    <td>@obj.Value.TotalSeats</td>
+                    <td>@obj.Value.AvailableSeats</td>
+                    <td>@obj.Value.SoldSeats</td>
+                    <td>@obj.Value.AmountRaised</td>
+                    <td>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="btn-main btn-main-fill fs--xsmall" @onclick="(e => ViewEventDetails(obj.Value.Id))">View</a>
+                            @*  <a class="btn-main btn-main-fill fs--xsmall">Update</a> *@
+                            @*  <a class="btn-main btn-main-fill fs--xsmall" @onclick="(e => DeleteEvent(obj.Value.Id))">Delete</a> *@
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public class EventResponseDTO
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Venue { get; set; }
+        public DateTime Date { get; set; }
+        public string? Artist { get; set; }
+        public decimal StartingPrice { get; set; }
+        public int TotalSeats { get; set; }
+        public int SoldSeats { get; set; }
+        public int AmountRaised { get; set; }
+        public int AvailableSeats { get; set; }
+
+    }
+    private List<EventResponseDTO> Events = new List<EventResponseDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEvents();
+    }
+
+    private async Task LoadEvents()
+    {
+        var endpoint = "Event/GetAllEvents";
+        Events = await _apiService.CallApiAsync<List<EventResponseDTO>>(endpoint, HttpMethod.Get);
+    }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+
+    private void ViewEventDetails(int eventId)
+    {
+        // Redirect to event details page
+        NavigationManager.NavigateTo($"/eventview/{eventId}");
+    }
+}

@@ -14,7 +14,7 @@
             <h2>@Event.Name</h2>
             <h3 class="pt-1 pb-3">@Event.Artist</h3>
             <div class="col-1 event-status">
-                <h5>Paid</h5>
+                <h5>@Event.Type</h5>
             </div>
 
             @if (Event.TierList.Count > 0)
@@ -34,6 +34,7 @@
         </div>
         <div class="col-1">
             <div class="divider-evt"></div>
+
         </div>
         <div class=" col-4 pt-3">
             <div class="row ">
@@ -55,15 +56,42 @@
                         <h5>Location</h5>
                         <h5>@Event.Venue</h5>
                     </div>
-                    <button id="payment-button" class="btn btn-outline-success mt-3" data-bs-dismiss="modal">Pay with Khalti</button>
+    
                 </div>
             </div>
+
+            @if (Event.Type == "Free")
+            {
+                <button id="payment-button" class="btn btn-success mt-4" @onclick="FreeTicket">Proceed</button>
+            }
+        
+        
         </div>
     </div>
 </div>
 
 @code {
     private EventResponseDTO Event = new EventResponseDTO();
+    private PaymentRequestDTO model = new PaymentRequestDTO();
+
+
+    public class PaymentResponse
+    {
+        public string pidx { get; set; }
+        public string payment_url { get; set; }
+        public DateTime expires_at { get; set; }
+        public int expires_in { get; set; }
+        public int user_fee { get; set; }
+    }
+
+    public class PaymentRequestDTO
+    {
+
+        public int? TierId { get; set; }
+        public int? EventId { get; set; }
+        public int Qty { get; set; }
+
+    }
 
     [Parameter]
     public string EventId { get; set; }
@@ -79,7 +107,33 @@
 
     private void NavigateToTierView(int tierId)
     {
-        NavigationManager.NavigateTo($"/ticket/{tierId}");
+        NavigationManager.NavigateTo($"/ticket/{EventId}/{tierId}");
+    }
+
+    private async Task dummyPay()
+    {
+        var endpoint = "Ticket/Payment";
+
+        model.EventId = int.Parse( EventId);
+
+        var res = await _apiService.CallApiAsync<PaymentResponse>(endpoint, HttpMethod.Post);
+        if (res != null)
+        {
+            NavigationManager.NavigateTo(res.payment_url);
+        }
+    }
+
+    private async Task FreeTicket()
+    {
+        var endpoint = "Ticket/FreeTicket";
+
+        model.EventId = int.Parse(EventId);
+
+        var res = await _apiService.CallApiAsync<object>(endpoint, HttpMethod.Post);
+        if (res != null)
+        {
+            NavigationManager.NavigateTo($"/ticketPurchase");
+        }
     }
 }
 

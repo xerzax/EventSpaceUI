@@ -110,7 +110,7 @@
 								@if (!string.IsNullOrEmpty(blog.PhotoName))
 								{
 									var imageUrl = $"https://localhost:7060/uploads/blog/{@blog.PhotoName}";
-									<img src = "@imageUrl" class="card-img-top" />
+									<img src="@imageUrl" class="card-img-top" />
 								}
 								else
 								{
@@ -124,7 +124,7 @@
 											Added Date: @blog.CreatedAt.ToString("MMMM dd, yyyy")
 										</small>
 									</p>
-								@* 	<button class="btn btn-primary" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
+									@* 	<button class="btn btn-primary" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
 								</div>
 							</div>
 						}
@@ -141,26 +141,25 @@
 					{
 						@foreach (var playlist in playlists)
 						{
-							<div class="card card-custom mb-5 w-80 border-gray">
-							
-									<img src="/images/Weeknd.jpeg" class="card-img-top" />
-								
+							<div class="card card-custom mb-5 w-80 border-gray" @onclick="() => NavigateToSongsView(playlist.Id)">
+
+								<img src="/images/Weeknd.jpeg" class="card-img-top" />
 								<div class="card-body">
 									<h2 class="card-title">@playlist.Title</h2>
 									<p class="card-text">
 										<small class="text-secondary">
-											@* Added Date: @blog.CreatedAt.ToString("MMMM dd, yyyy") *@
+											@* Added Date: @playlist.Cr.ToString("MMMM dd, yyyy") *@
 										</small>
 									</p>
-									@* 	<button class="btn btn-primary" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
 								</div>
 							</div>
 						}
 					}
 					else
 					{
-						<p class="text-muted"><em>No blogs found.</em></p>
+						<p class="text-muted"><em>No playlist found.</em></p>
 					}
+
 				</div>
 			</div>
 		</div>
@@ -323,10 +322,10 @@
 		playlists = await _apiService.CallApiAsync<List<Playlist>>("Playlist/GetAllPlaylist", HttpMethod.Get);
 	}
 
-	private async Task  PostComment(int id, int contentType)
+	private async Task PostComment(int id, int contentType)
 	{
 		var typeVal = "";
-		if(contentType == 1)
+		if (contentType == 1)
 		{
 			typeVal = "Photo";
 		}
@@ -349,7 +348,7 @@
 		await _apiService.CallApiAsync<Blog>("Blog/PostBlogs", HttpMethod.Post, newBlog);
 		await LoadBlogs();
 
-		newBlog = new Blog();  
+		newBlog = new Blog();
 	}
 
 	private async Task UploadImage()
@@ -362,6 +361,13 @@
 
 	}
 
+	private void NavigateToSongsView(int id)
+	{
+		NavigationManager.NavigateTo($"/songs/{id}");
+	}
+
+
+
 	// public async Task FollowUser(string userId)
 	// {
 	// 	var convertedUserId = Guid.Parse(userId); // Convert string to Guid
@@ -369,28 +375,28 @@
 	// 	// Create a model object to send to the API
 	// 	var followRequest = new Follow { UserId = convertedUserId };
 
-		
+
 	// 		// Make an HTTP POST request to the API endpoint
 	// 		var response = await _apiService.CallApiAsync<Follow>("Follow/FollowUser", followRequest);
-		
+
 	// }
 
-	
 
-    private async Task UploadPhoto()
-    {
-        var fileContent = new MultipartFormDataContent();
-        fileContent.Add(new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(newBlog.PhotoName))), "file", "blogImage.jpg");
-        var response = await Http.PostAsync("https://localhost:7060/api/File/upload", fileContent);
-        if (response.IsSuccessStatusCode)
-        {
-          
-        }
-        else
-        {
-           
-        }
-    }
+
+	private async Task UploadPhoto()
+	{
+		var fileContent = new MultipartFormDataContent();
+		fileContent.Add(new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(newBlog.PhotoName))), "file", "blogImage.jpg");
+		var response = await Http.PostAsync("https://localhost:7060/api/File/upload", fileContent);
+		if (response.IsSuccessStatusCode)
+		{
+
+		}
+		else
+		{
+
+		}
+	}
 
 	private async Task UploadPhotoForPost()
 	{
@@ -407,15 +413,15 @@
 		}
 	}
 
-    private async Task OnInputBlogUpload(InputFileChangeEventArgs e)
-    {
-        using var formData = new MultipartFormDataContent();
+	private async Task OnInputBlogUpload(InputFileChangeEventArgs e)
+	{
+		using var formData = new MultipartFormDataContent();
 
-        var file = e.File;
+		var file = e.File;
 
-        var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
+		var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
 
-        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+		fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
 
 		formData.Add(content: fileContent, name: "File", fileName: file.Name);
 

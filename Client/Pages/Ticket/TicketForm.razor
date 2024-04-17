@@ -1,4 +1,4 @@
-﻿@page "/ticket/{tierId}"
+﻿@page "/ticket/{EventId}/{tierId}"
 @using EventSpaceUI.Client.Utilities
 @using static EventSpaceUI.Client.Pages.Event.EventForm
 @inject HttpClient HttpClient
@@ -18,10 +18,23 @@
 			</div>
 			<input type="hidden" id="tierSeats" value="@tier.AvailableSeats" />
 			<div class="pb-5">
-				<input type="number" @bind="ticketQuantity" class="form-control" placeholder="Enter number of tickets" @oninput="CalculateTotal" />
+				<input type="number" @bind="ticketQuantity" class="form-control" placeholder="Enter number of tickets" @onblur="CalculateTotal" />
 			</div>
+
+			<div>
+				<input type="radio" name="purchaseType" checked="@IsGifted" @onchange="@(e => IsGifted = true)" /> Gift
+				<input type="radio" name="purchaseType" checked="@(!IsGifted)" @onchange="@(e => IsGifted = false)" /> Purchase for self
+			</div>
+
 			<div class="pt-4 d-grid gap-2">
-				<button type="button" id="proceedBtn" class="btn btn-main btn-main-fill" data-bs-toggle="modal" data-bs-target="#ticketModal">Proceed</button>
+				@if (IsGifted)
+				{
+					<button type="button" id="proceedBtn" class="btn btn-main btn-main-fill" data-bs-toggle="modal" data-bs-target="#ticketModal">Proceed</button>
+				}
+				@if (!IsGifted)
+				{
+					<button @onclick="dummyPay" class="btn btn-main btn-main-fill w-100 fs-6" id="payment-button">Pay with Khalti</button>
+				}
 			</div>
 		</div>
 
@@ -56,8 +69,8 @@
 					<div class="pt-3"><span>Tier type:</span> @tier.Name</div>
 					<div class="pt-3"><span>Price per seat:</span> <span id="confirmPrice">@tier.Price</span></div>
 					<div class="pt-3">Total: NPR. @totalPrice</div>
-					<input type="email" class="form-control d-block mt-3" id="receiverEmail" placeholder="Enter receiver email" />
-					<button id="payment-button" class="btn btn-success mt-4" @onclick="PurchaseTicket">Pay with Khalti</button>
+					<input type="email" class="form-control d-block mt-3" id="receiverEmail" placeholder="Enter receiver email" @bind="model.Email"/>
+					<button id="payment-button" class="btn btn-success mt-4" @onclick="dummyPay">Pay with Khalti</button>
 				</div>
 			</div>
 		</div>
@@ -72,8 +85,53 @@
 	private int ticketQuantity = 0;
 	private decimal totalPrice = 0;
 
+	private bool IsGifted { get; set; } = false;
+	private PaymentRequestDTO model = new PaymentRequestDTO();
+	public class PaymentResponse
+	{
+		public string pidx { get; set; }
+		public string payment_url { get; set; }
+		public DateTime expires_at { get; set; }
+		public int expires_in { get; set; }
+		public int user_fee { get; set; }
+	}
+
+
+	public class PaymentRequestDTO
+	{
+
+		public int? TierId { get; set; }
+
+		public int EventId { get; set; }
+
+		public int Qty { get; set; }
+		public string Email { get; set; }
+
+
+	}
+
+	private async Task dummyPay()
+	{
+		var endpoint = "Ticket/Payment";
+
+		model.EventId = int.Parse(EventId);
+
+		model.TierId = int.Parse(TierId);
+		model.Qty = ticketQuantity;
+
+		var res = await _apiService.CallApiAsync<PaymentResponse>(endpoint, HttpMethod.Post,model);
+		if (res != null)
+		{
+			NavigationManager.NavigateTo(res.payment_url);
+		}
+	}
+
 	[Parameter]
 	public string TierId { get; set; }
+
+
+	[Parameter]
+	public string EventId { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -87,6 +145,7 @@
 	private void CalculateTotal()
 	{
 		totalPrice = tier.Price * ticketQuantity;
+		StateHasChanged();
 	}
 	private async Task LoadEventDetails()
 	{

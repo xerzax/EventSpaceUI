@@ -159,6 +159,10 @@ namespace EventSpaceUI.Client.Utilities
                     var token = tokenHandler.ReadJwtToken(loginResponse.Token);
                     var roleClaim = token.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
 
+
+                    await _localStorageService.SetItemAsync("role", roleClaim);
+
+
                     //return "Login successful";
                     return ("Login successful", roleClaim);
                 }
