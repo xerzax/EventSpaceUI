@@ -1,4 +1,5 @@
-﻿using static EventSpaceUI.Client.Pages.Auth.Login;
+﻿using EventSpaceUI.Client.Shared.Model;
+using static EventSpaceUI.Client.Pages.Auth.Login;
 using static EventSpaceUI.Client.Pages.Auth.Register;
 
 namespace EventSpaceUI.Client.Utilities
@@ -10,5 +11,9 @@ namespace EventSpaceUI.Client.Utilities
 
         Task<(string message, string role)> Login(LoginModel model);
         Task<string> Register(RegisterModel registerModel);
-    }
+
+        Task<DataModel[]> GetChartDataAsync(string url, HttpMethod method, object data = null);
+
+
+	}
 }

@@ -83,6 +83,14 @@
         public int expires_in { get; set; }
         public int user_fee { get; set; }
     }
+    
+    public class FreeTicketResponse
+    {
+        public int Qty { get; set; }
+        public int TotalPrice { get; set; }
+        public string Venue { get; set; }
+        public string Date { get; set; }
+    }
 
     public class PaymentRequestDTO
     {
@@ -129,7 +137,7 @@
 
         model.EventId = int.Parse(EventId);
 
-        var res = await _apiService.CallApiAsync<object>(endpoint, HttpMethod.Post);
+        var res = await _apiService.CallApiAsync<FreeTicketResponse>(endpoint, HttpMethod.Post);
         if (res != null)
         {
             NavigationManager.NavigateTo($"/ticketPurchase");

@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
+using EventSpaceUI.Client.Shared.Model;
 
 namespace EventSpaceUI.Client.Utilities
 {
@@ -187,6 +188,42 @@ namespace EventSpaceUI.Client.Utilities
             }
 
         }
+
+
+        public async Task<DataModel[]> GetChartDataAsync(string url, HttpMethod method, object data = null)
+        {
+            var token = await _sessionStorageService.GetItemAsync<string>("JWT_TOKEN");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            string fullUrl = $"{_baseUrl}/{url}";
+            HttpResponseMessage response;
+
+            switch (method.Method)
+            {
+                case "GET":
+                    response = await _httpClient.GetAsync(fullUrl);
+                    break;
+                case "POST":
+                    var content = JsonContent.Create(data);
+                    response = await _httpClient.PostAsync(fullUrl, content);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid HTTP method.");
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<DataModel[]>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }
 

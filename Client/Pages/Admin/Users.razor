@@ -11,50 +11,61 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
+                <th scope="col">UserName</th>
+                <th scope="col">FullName</th>
+                <th scope="col">Address</th>
+
                 <th scope="col">Email</th>
-                <th scope="col">Role</th>
+                <th scope="col">Contact</th>
+
 
             </tr>
         </thead>
         <tbody>
 
-@* 
-            @foreach (var obj in Model)
+
+            @foreach (var obj in UsersList)
             {
                 <tr>
-
-                    <td>@obj.FirstName</td>
-                    <td>@obj.LastName</td>
-                    <td>@obj.FirstName</td>
+                    <td> </td>
+                    <td>@obj.UserName</td>
+                    <td>@obj.FullName</td>
+                    <td>@obj.Address</td>
                     <td>@obj.Email</td>
-                    @foreach (var role in obj.Roles)
-                    {
-                        <td>@role</td>
-                    }
-                    <td>
-                        @if (obj.User.EmailConfirmed == false)
-                        {
-                            <a class="btn btn-primary" asp-controller="Admin" asp-action="VerifyOrganizer" asp-route-id="@obj.User.Id">Verify</a>
-                        }
-                    </td>
+                    <td>@obj.Contact</td>
+
+           
 
 
                 </tr>
 
             }
- *@
+
         </tbody>
     </table>
 </div>
 
 @code{
-    // public class Model
-    // {
-    //     public string Name { get; set; }
-    //     public string Email { get; set; }
-    // }
+    public class UserResponseDTO
+    {
+        public string UserName { get; set; }
+        public string FullName { get; set; }
+
+
+        public string? Email { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? Contact { get; set; }
+    }
+    private List<UserResponseDTO> UsersList= new List<UserResponseDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var endpoint = "Dashboard/get-all-user";
+        UsersList = await _apiService.CallApiAsync<List<UserResponseDTO>>(endpoint, HttpMethod.Get);
+    }
+
 
 
 }

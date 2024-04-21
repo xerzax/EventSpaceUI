@@ -1,0 +1,97 @@
+﻿@page "/eventChart/{eventId}"
+@using EventSpaceUI.Client.Shared.Model
+@using EventSpaceUI.Client.Utilities
+@using Blazorise.Charts
+@inject IApiService _apiService
+@layout AdminLayout
+
+<h3>Event Stats</h3>
+<div class="row">
+    <h3>@chartData.Name</h3>
+    <div class="col-md-4">Available: @chartData.AvailableTickets</div>
+    <div class="col-md-4">Sold: @chartData.TicketsSold</div>
+    <div class="col-md-4">Total: @(chartData.AvailableTickets + chartData.TicketsSold)</div>
+</div>
+
+
+
+<div style="width: 300px; height: 300px;">
+    <Chart @ref="pieChart" Type="ChartType.Pie" TItem="double" Clicked="@(async () => await HandleRedraw())" />
+</div>
+
+
+@code {
+    [Parameter]
+    public string EventId { get; set; }
+    public class TicketsSoldByEvent
+    {
+        public string Name { get; set; }
+        public double TicketsSold { get; set; }
+        public double AvailableTickets { get; set; }
+
+    }
+
+    Chart<double> pieChart;
+    TicketsSoldByEvent chartData = new TicketsSoldByEvent();
+
+    List<string> Labels => new List<string>()
+    {
+        "Available Tickets",
+        "Sold Tickets"
+    };
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        chartData = await _apiService.CallApiAsync<TicketsSoldByEvent>($"event/GetTicketsSoldByEvent/{EventId}", HttpMethod.Get);
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            await FetchDataAndUpdateChart();
+        }
+    }
+
+    async Task FetchDataAndUpdateChart()
+    {
+        chartData = await _apiService.CallApiAsync<TicketsSoldByEvent>($"event/GetTicketsSoldByEvent/{EventId}", HttpMethod.Get);
+
+        await pieChart.AddLabelsDatasetsAndUpdate(Labels,GetPieChartDatasets());
+    }
+
+    async Task HandleRedraw()
+    {
+        await pieChart.Clear();
+    }
+
+    private PieChartDataset<double> GetPieChartDatasets()
+    {
+
+
+        return new PieChartDataset<double>
+            {
+                Data = RandomizeData(),
+                Label = "Tickets Sold",
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                BorderWidth = 1
+            };
+
+
+    }
+    List<double> RandomizeData()
+    {
+
+        List<double> data = new List<double>();
+        data.Add(chartData.AvailableTickets);
+        data.Add(chartData.TicketsSold);
+
+        return data;
+    }
+    List<string> backgroundColors => new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f) };
+    List<string> borderColors => new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f) };
+}
