@@ -11,11 +11,27 @@
     padding: 0.2rem 0.2rem;
     border-radius: 0.4rem;
     background-color: #EA9C01;
-    width: 6rem;
+    width: 8rem;
     height: 2rem;
     text-align: center;
 }
 
+
+h2{
+    color:white;
+}
+
+h3{
+    color: white;
+}
+
+h4{
+    color: white;
+}
+h5{
+    color: white;
+
+}
 .box {
     border-radius: 0.5rem;
     border: 1px solid white;
@@ -29,6 +45,7 @@
     padding: 1rem;
     border-radius: 0.5rem;
     border: 1px solid #474747;
+    color: white;
 }
 
     .event-list:hover {
@@ -53,6 +70,7 @@
 
 .event-text {
     text-align: center;
+    color: white;
     background-color: rgba(255, 0, 0, 0.5);
     padding: 10px;
     position: absolute;
@@ -96,6 +114,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .event-card .event-details {
     padding-top: 0.5rem;
     padding: 1rem 1rem;
+    color: white;
    
 }
 
@@ -110,6 +129,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 .event-heading {
     position: relative;
+    color: white;
 }
 .evt-btn {
     position: absolute;
@@ -122,5 +142,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 .details p{
     font-size: 14px;
+    color: white;
 }
+
+
+
 

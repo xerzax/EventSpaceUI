@@ -8,7 +8,7 @@
 		<a class="navbar-brand fs-4" href="#">
 			<img src="images/logo.png" alt="Event Space Logo" height="70px" width="70px" class="img-fluid" />
 		</a>
-		<button class="navbar-toggler btn-custom" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+		<button class="navbar-toggler btn-custom bg-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -55,7 +55,6 @@
 @code {
 	async Task Logout()
 	{
-		Console.WriteLine("hello");
 		await LocalStorage.RemoveItemAsync("token");
 		((CustomAuthStateProvider)AuthStateProvider).NotifyLogout();
 		NavManager.NavigateTo("/login");

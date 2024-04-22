@@ -1,4 +1,4 @@
-﻿@page "/register"
+﻿@* @page "/register"
 @using EventSpaceUI.Client.Utilities
 @inject IApiService _apiService
 @inject IJSRuntime jsRuntime
@@ -67,6 +67,126 @@
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string Role { get; set; }
+    }
+
+    private async Task RegisterUser()
+    {
+        var response = await _apiService.Register(registerModel);
+
+        if (response == "Registration successful")
+        {
+            registerResultMessage = response;
+            await jsRuntime.InvokeVoidAsync("toastr.success", "Registration successful");
+        }
+        else
+        {
+            registerResultMessage = response;
+            await jsRuntime.InvokeVoidAsync("toastr.error", "Registration failed", "Invalid registration");
+        }
+    }
+} *@
+
+
+
+@page "/register"
+@using EventSpaceUI.Client.Utilities
+@inject IApiService _apiService
+@inject IJSRuntime jsRuntime
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="container-fluid p-0">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
+                            <img src="images/vector2.png" class="img-fluid rounded-start" style="width: 80%;" alt="...">
+                            <small class="text-center text-secondary">Join the events now with a membership</small>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="header-text text-center mb-4 text-white">
+                                <h2>Register</h2>
+                            </div>
+                            <EditForm EditContext="@editContext" OnValidSubmit="@RegisterUser">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="Name" @bind="registerModel.Name">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="email" class="form-control form-control-lg bg-light fs-6" placeholder="Email address" @bind="registerModel.Email">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control form-control-lg bg-light fs-6" placeholder="Password" @bind="registerModel.Password">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control form-control-lg bg-light fs-6" placeholder="Confirm Password" @bind="registerModel.ConfirmPassword">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <select class="form-control form-control-lg bg-light fs-6" @bind="registerModel.Role">
+                                        <option>Select User</option>
+                                        <option value="Organizer">Organizer</option>
+                                        <option value="User">User</option>
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <button type="submit" class="btn btn-lg btn-danger w-100 fs-6">Register</button>
+                                </div>
+                                <div class="row">
+                                    <small class="text-white-50">Already have an account? <a href="/login" class="text-info">Login</a></small>
+                                </div>
+                                @if (!string.IsNullOrEmpty(registerResultMessage))
+                                {
+                                    <p class="text-center mt-3 text-white">@registerResultMessage</p>
+                                }
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterModel registerModel = new RegisterModel();
+    private string registerResultMessage;
+    private EditContext editContext;
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(registerModel);
+        editContext.OnValidationStateChanged += HandleValidationStateChanged;
+    }
+
+    public class RegisterModel
+    {
+        [Required(ErrorMessage = "Name is required.")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Password is required.")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Confirm Password is required.")]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Role is required.")]
+        public string Role { get; set; }
+    }
+
+    private void HandleValidationStateChanged(object sender, ValidationStateChangedEventArgs e)
+    {
+        // This method is left empty intentionally.
+        // It can be used for additional logic when validation state changes, if necessary.
     }
 
     private async Task RegisterUser()

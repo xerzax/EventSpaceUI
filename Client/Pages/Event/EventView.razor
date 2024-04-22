@@ -13,11 +13,11 @@
         <div class="col-7">
             <h2>@Event.Name</h2>
             <h3 class="pt-1 pb-3">@Event.Artist</h3>
-            <div class="col-1 event-status">
+            <div class="event-status">
                 <h5>@Event.Type</h5>
             </div>
 
-            @if (Event.TierList.Count > 0)
+            @if (Event.TierList.Count > 0 && Event.Type != "Free")
             {
                 @foreach (var tier in Event.TierList)
                 {
@@ -64,8 +64,29 @@
             {
                 <button id="payment-button" class="btn btn-success mt-4" @onclick="FreeTicket">Proceed</button>
             }
-        
-        
+
+            @if (Event.Type == "Fundraiser")
+            {
+                <button type="button" id="proceedBtn" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#donateModal">Donate</button>
+
+            }
+            <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg--primary border-white">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="eventModalLabel">Ticket confirmation</h1>
+                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="pt-3"><span>Event:</span> @Event.Name</div>
+                            <input type="number" class="form-control d-block mt-3" id="donationAmount" placeholder="Enter amount to donate" @bind="donationAmt" />
+                            <button id="payment-button" class="btn btn-success mt-4" @onclick="donate">Pay with Khalti</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>
@@ -73,6 +94,10 @@
 @code {
     private EventResponseDTO Event = new EventResponseDTO();
     private PaymentRequestDTO model = new PaymentRequestDTO();
+
+
+    public decimal donationAmt { get; set; }
+
 
 
     public class PaymentResponse
@@ -83,7 +108,7 @@
         public int expires_in { get; set; }
         public int user_fee { get; set; }
     }
-    
+
     public class FreeTicketResponse
     {
         public int Qty { get; set; }
@@ -118,11 +143,30 @@
         NavigationManager.NavigateTo($"/ticket/{EventId}/{tierId}");
     }
 
+
+    private async Task donate()
+    {
+        var endpoint = "Ticket/Donate";
+
+
+        var donationmodel = new
+        {
+            eventId = int.Parse(EventId),
+            amt = donationAmt
+        };
+
+        var res = await _apiService.CallApiAsync<PaymentResponse>(endpoint, HttpMethod.Post, donationmodel);
+        if (res != null)
+        {
+            NavigationManager.NavigateTo(res.payment_url);
+        }
+    }
+
     private async Task dummyPay()
     {
         var endpoint = "Ticket/Payment";
 
-        model.EventId = int.Parse( EventId);
+        model.EventId = int.Parse(EventId);
 
         var res = await _apiService.CallApiAsync<PaymentResponse>(endpoint, HttpMethod.Post);
         if (res != null)

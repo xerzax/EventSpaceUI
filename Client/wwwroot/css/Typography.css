@@ -1,11 +1,13 @@
 ﻿.fs--heading-xl {
     font-size: 3.2rem;
     line-height: 2.9rem;
+    color:white;
 }
 
 .fs--heading-1 {
     font-size: 2.4rem;
     line-height: 2.9rem;
+    color:white;
 }
 
 .fs--heading-2 {
@@ -17,11 +19,13 @@
 .fs--normal {
     font-size: 1.6rem;
     line-height: 2rem;
+    color: white;
 }
 
 .fs--medium {
     font-size: 1.4rem !important;
     line-height: 1.7rem !important;
+    color:white;
 }
 
 .fs--small {
@@ -36,4 +40,8 @@
 
 .playlist-text {
     color: #BA1D37;
+}
+
+.card-title{
+    color: white;
 }

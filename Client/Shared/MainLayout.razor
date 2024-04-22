@@ -7,11 +7,8 @@
 
 
 
-	<div class="page bg-dark">
+	<div class="page bg--primary">
 		<div >
-	
-	
-
 		<NavMenu />
 
 		</div>
@@ -25,27 +22,3 @@
 	</div>
 
 
-
-@* @code{
-	private ClaimsPrincipal User { get; set; }
-	private string Role = "";
-
-	protected override async Task OnInitializedAsync()
-	{
-		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-		User = authState.User;
-		SetLayoutBasedOnUserRole();
-	}
-	private void SetLayoutBasedOnUserRole()
-	{
-		if (User != null && User.Identity.IsAuthenticated)
-		{
-			var roles = User.Claims
-				.Where(c => c.Type == ClaimTypes.Role)
-				.Select(c => c.Value)
-				.ToList();
-			Role = roles.FirstOrDefault();
-		}
-	}
-} *@
-	

@@ -85,7 +85,7 @@
 									<div class="mt-4">
 										<h4>Add Comment</h4>
 										<textarea class="form-control" placeholder="Enter your comment" @bind=comment></textarea>
-										<button class="btn btn-primary mt-2" @onclick="() => PostComment(photo.Id,1)">Add Comment</button>
+										<button class="btn-main btn-main-fill mt-2" @onclick="() => PostComment(photo.Id,1)">Add Comment</button>
 
 
 									</div>
@@ -124,7 +124,7 @@
 											Added Date: @blog.CreatedAt.ToString("MMMM dd, yyyy")
 										</small>
 									</p>
-									@* 	<button class="btn btn-primary" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
+									@* 	<button class="btn-main btn-main-fill" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
 								</div>
 							</div>
 						}
@@ -181,7 +181,7 @@
 <!-- Blog Modal -->
 <div class="modal fade" id="blogModal" tabindex="-1" aria-labelledby="blogModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-		<div class="modal-content bg--secondary">
+		<div class="modal-content bg-dark">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="exampleModalLabel">Create blog</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -202,8 +202,8 @@
 						<InputFile OnChange="@OnInputBlogUpload" class="form-control" id="fileUpload" />
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Create Blog</button>
+						<button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-danger">Create Blog</button>
 					</div>
 				</form>
 			</div>
@@ -214,7 +214,7 @@
 <!-- Photo Modal -->
 <div class="modal fade " id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-		<div class="modal-content bg--secondary">
+		<div class="modal-content bg-dark">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="exampleModalLabel">Upload Image</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -235,8 +235,8 @@
 						<InputFile OnChange="@OnInputPhotoUpload" class="form-control" id="fileUpload" />
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Upload</button>
+						<button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-danger">Upload</button>
 					</div>
 				</form>
 			</div>
@@ -282,7 +282,6 @@
 		public string Tags { get; set; }
 		public string PhotoName { get; set; }
 		public DateTime CreatedAt { get; set; }
-		public string UserId { get; set; }
 	}
 
 	public class Playlist

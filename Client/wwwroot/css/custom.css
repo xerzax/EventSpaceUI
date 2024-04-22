@@ -183,6 +183,10 @@ p {
         font-size: 24px;
     }
 
+    .discover-text{
+        color: lightslategray;
+    }
+
 
 
 /*.search-main {
@@ -329,7 +333,7 @@ p {
 }
 
 .display-4 {
-    font-size: 3rem;  Adjusted font size for the h1 element 
-    font-family: Arial, sans-serif;  Change font family for the h1 element 
-    color: #fff;  Text color for the h1 element 
+    font-size: 3rem; 
+    font-family: Arial, sans-serif; 
+    color: #fff;  
 }

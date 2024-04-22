@@ -1,25 +1,11 @@
 ﻿@page "/"
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 
 
 <PageTitle>Index</PageTitle>
 
-
-
-@* 
-<div class="bg-image h-70 ">
-	<h1 class="bg-text-centered">Welcome to EventSpace</h1>
-	<div class="search-main">
-
-		<div class="form-group has-search">
-			<form>
-				<span class="bi bi-search form-control-feedback"></span>
-				<input type="text" class="form-control search-input" name="searchValue" placeholder="Search by event or artist">
-			</form>
-		</div>
-	</div>
-</div> *@
 <section class="img-bg text-center main-sec">
 	<h1 class="display-4">Welcome To EventSpace</h1>
 	<div class="main">
@@ -27,7 +13,7 @@
 			<form>
 				<span class="fas fa-search form-control-feedback text-black">
 				</span>
-				<input type="text" class="form-control search-input opacity-75"  name="searchValue" placeholder="Search by event">
+				<input type="text" class="form-control search-input opacity-75" name="searchValue" placeholder="Search by event">
 			</form>
 		</div>
 	</div>
@@ -35,20 +21,18 @@
 <div class="sec-section" style="background: #212529">
 	<div class="d-flex">
 		<p class=" p-5 @textClass" @onclick="ToggleFontSize">
-			Lorem ipsum dolor sit amet. Eos dolore vitae rem atque expedita et asperiores nihil et exercitationem consequuntur qui voluptas dolorum. Id dolorem corrupti qui eius autem id accusantium sunt rem expedita ullam ut fuga maiores.
+
+			Eventspace is the dynamic hub where the pulse of entertainment thrives. Offering a seamless platform for event organizers, from concert promoters to festival planners, Eventspace revolutionizes ticket selling and event management.
 		</p>
 	</div>
 	<div class="p-4">
 		<div class="row row-cols-1 row-cols-md-3 g-4">
 			<div class="col">
 				<div class="card h-100">
-					<img src="images/homepage.jpg" class="card-img-top" alt="...">
+					<img src="images/bgimage.jpg" class="card-img-top" alt="...">
 					<div class="card-body border-bottom">
-						<h5 class="card-title text-white">Card title</h5>
+						<h5 class="card-title text-white">Best Events</h5>
 						<p class="card-text text-white">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-					</div>
-					<div class="card-footer d-flex justify-content-center">
-						<button class="btn btn-outline-light">Read More</button>
 					</div>
 				</div>
 			</div>
@@ -56,23 +40,17 @@
 				<div class="card h-100">
 					<img src="images/homepage.jpg" class="card-img-top" alt="...">
 					<div class="card-body border-bottom">
-						<h5 class="card-title text-white">Card title</h5>
+						<h5 class="card-title text-white">Great Experience</h5>
 						<p class="card-text text-white">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-					</div>
-					<div class="card-footer d-flex justify-content-center">
-						<button class="btn btn-outline-light">Read More</button>
 					</div>
 				</div>
 			</div>
 			<div class="col">
 				<div class="card h-100">
-					<img src="images/homepage.jpg" class="card-img-top" alt="...">
+					<img src="images/login.jpg" class="card-img-top" alt="...">
 					<div class="card-body border-bottom">
-						<h5 class="card-title text-white">Card title</h5>
+						<h5 class="card-title text-white">Convenience</h5>
 						<p class="card-text text-white">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
-					</div>
-					<div class="card-footer d-flex justify-content-center">
-						<button class="btn btn-outline-light">Read More</button>
 					</div>
 				</div>
 			</div>
@@ -85,14 +63,14 @@
 		<div class="col-12 col-md-6">
 			<div class="text-center text-md-start">
 				<h1 class="display-md-2 display-4 fw-bold text-dark">
-					<span class="discover">Discover </span>the Future of Tech
+					<span class="discover">Discover </span> <span class="discover-text">the Future of Events</span>
 				</h1>
 				<p class="lead">
 					Explore our latest events around you to elevate
 					your social lifestyle.
 				</p>
-				<button class="btn btn-primary px-5 py-3 mt-3 fs-5 fw-medium"
-						type="button">
+				<button class="btn-main btn-main-fill px-5 py-3 mt-3 fs-5 fw-medium"
+						type="button" @onclick="NavigateToEvents">
 					Shop Now
 				</button>
 			</div>
@@ -127,8 +105,8 @@
 				your trusted companion in unlocking the endless possibilities of the event world. Welcome to EventSpace Central – where every
 				event is an adventure waiting to be explored.
 			</p>
-			<button class="btn btn-primary px-5 py-3 mt-3 fs-5 fw-medium"
-					type="button">
+			<button class="btn-main btn-main-fill px-5 py-3 mt-3 fs-5 fw-medium"
+					type="button" @onclick="NavigateToEvents">
 				Read More About Now
 			</button>
 		</div>
@@ -228,15 +206,15 @@
 					 tabindex="0">
 					<div class="row g-4 mt-5 justify-content-center align-items-center">
 						<div class="col-12 col-md-4">
-							<img src="/images/eventlogo.png"
+							<img src="/images/arctic.jpeg"
 								 alt=""
 								 class="img-fluid  d-block mx-auto" />
 						</div>
 						<div class="col-12 col-md-4">
-							<img src="/images/eventlogo.png" alt="" class="img-fluid  d-block mx-auto" />
+							<img src="/images/Music Poster Template Vinyl Record Template Download on Pngtree.jpeg" alt="" class="img-fluid  d-block mx-auto" />
 						</div>
 						<div class="col-12 col-md-4">
-							<img src="/images/eventlogo.png" alt="" class="img-fluid  d-block mx-auto" />
+							<img src="/images/lanadidi.jpeg" alt="" class="img-fluid  d-block mx-auto" />
 						</div>
 					</div>
 				</div>
@@ -250,7 +228,7 @@
 							<img src="/images/homepage.jpg" alt="" class="img-fluid" />
 						</div>
 						<div class="col-12 col-md-4">
-							<img src="/images/homepage.jpg" alt="" class="img-fluid" />
+							<img src="/images/login.jpg" alt="" class="img-fluid" />
 						</div>
 					</div>
 				</div>
@@ -261,7 +239,7 @@
 					 tabindex="0">
 					<div class="row g-4 mt-5">
 						<div class="col-12 col-md-4">
-							<img src="/images/mainimage.jpg"
+							<img src="/images/livemusic.jpeg"
 								 alt=""
 								 class="img-fluid" />
 						</div>
@@ -366,14 +344,43 @@
 
 </div>
 @code {
-	
+
 	private bool isLargeFont = false;
+
 
 	private void ToggleFontSize()
 	{
 		isLargeFont = !isLargeFont;
 	}
 
+	private async Task NavigateToEvents()
+	{
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+
+		if (user.Identity.IsAuthenticated)
+		{
+			NavigationManager.NavigateTo("/eventindex");
+		}
+		else
+		{
+			NavigationManager.NavigateTo("/login");
+		}
+	}
+	private async Task NavigateToPost()
+	{
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+
+		if (user.Identity.IsAuthenticated)
+		{
+			NavigationManager.NavigateTo("/postindex");
+		}
+		else
+		{
+			NavigationManager.NavigateTo("/login");
+		}
+	}
 	private string textClass => isLargeFont ? "interactive-text larger" : "interactive-text";
 }
 

@@ -2,6 +2,14 @@
 @using EventSpaceUI.Client.Utilities
 @inject IApiService _apiService
 
+
+
+<style>
+	.nav-pills .nav-link.active {
+		background-color: #8C0B0B;
+		color: white; 
+	}
+</style>
 <div class="container-fluid p-5 mt-4">
 
 	@if (Songs != null && Songs.Any())

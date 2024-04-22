@@ -44,12 +44,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link @(NavManager.Uri.Contains("/adminReport") ? "active" : "")" href="/adminReport">
-                        <i class="fas fa-file-alt"></i>
-                        Reports
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link logout-link" @onclick="Logout">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
@@ -67,15 +61,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(NavManager.Uri.Contains("/addevents") ? "active" : "")" href="/addevents">
+                        <a class="nav-link @(NavManager.Uri.Contains("/eventform") ? "active" : "")" href="/eventform">
                             <i class="fas fa-calendar-alt"></i>
                             Add Event
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(NavManager.Uri.Contains("/Organizer/report") ? "active" : "")" href="/Organizer/report">
-                            <i class="fas fa-file-alt"></i>
-                            Report
                         </a>
                     </li>
                     <li class="nav-item">

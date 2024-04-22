@@ -21,7 +21,7 @@
 				<input type="number" @bind="ticketQuantity" class="form-control" placeholder="Enter number of tickets" @onblur="CalculateTotal" />
 			</div>
 
-			<div>
+			<div class="text-white">
 				<input type="radio" name="purchaseType" checked="@IsGifted" @onchange="@(e => IsGifted = true)" /> Gift
 				<input type="radio" name="purchaseType" checked="@(!IsGifted)" @onchange="@(e => IsGifted = false)" /> Purchase for self
 			</div>
@@ -29,11 +29,11 @@
 			<div class="pt-4 d-grid gap-2">
 				@if (IsGifted)
 				{
-					<button type="button" id="proceedBtn" class="btn btn-main btn-main-fill" data-bs-toggle="modal" data-bs-target="#ticketModal">Proceed</button>
+					<button type="button" id="proceedBtn" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ticketModal">Proceed</button>
 				}
 				@if (!IsGifted)
 				{
-					<button @onclick="dummyPay" class="btn btn-main btn-main-fill w-100 fs-6" id="payment-button">Pay with Khalti</button>
+					<button @onclick="dummyPay" class="btn btn-outline-light w-100 fs-6" id="payment-button">Pay with Khalti</button>
 				}
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 					<div>Qty</div>
 					<div>Total</div>
 				</div>
-				<div class="d-flex justify-content-between pt-5">
+				<div class="d-flex justify-content-between pt-5 fs--normal">
 					<div>@tier.Price</div>
 					<div>@ticketQuantity</div>
 					<div>@totalPrice</div>
@@ -105,16 +105,17 @@
 		public int EventId { get; set; }
 
 		public int Qty { get; set; }
-		public string Email { get; set; }
+
+		public string? Email { get; set; }
 
 
 	}
-
 
 	private async Task dummyPay()
 	{
 		var endpoint = "Ticket/Payment";
 
+	
 		model.EventId = int.Parse(EventId);
 
 		model.TierId = int.Parse(TierId);
