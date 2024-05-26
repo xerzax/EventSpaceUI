@@ -5,9 +5,11 @@
 @inject IApiService _apiService
 @layout AdminLayout
 
+
+
 <h3>Tickets sold by category</h3>
 
-<Chart @ref="barChart" Type="ChartType.Bar" TItem="double" Clicked="@(async () => await HandleRedraw())" />
+<Chart @ref="barChart" Type="Blazorise.Charts.ChartType.Bar" TItem="double" Clicked="@(async () => await HandleRedraw())" />
 @code {
     public class TicketsSoldByCategory
     {

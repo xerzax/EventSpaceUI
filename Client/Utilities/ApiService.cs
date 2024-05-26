@@ -29,9 +29,6 @@ namespace EventSpaceUI.Client.Utilities
 		private readonly AuthenticationStateProvider _authStateProvider;
 
 
-
-
-
 		public ApiService(HttpClient httpClient, IJSRuntime jsRuntime, ISessionStorageService sessionStorageService, ILocalStorageService localStorageService, AuthenticationStateProvider authStateProvider)
 		{
 			_httpClient = httpClient;
@@ -74,7 +71,8 @@ namespace EventSpaceUI.Client.Utilities
 
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<T>();
+				if (fullUrl.Contains("Follow")) return default;
+				return await response.Content.ReadFromJsonAsync<T>();
             }
             else
             {
@@ -104,37 +102,7 @@ namespace EventSpaceUI.Client.Utilities
             }
         }
 
-		//public async Task<string> Login(LoginModel loginModel)
-		//{
-		//    var url = "Account/Login";
-		//    string fullUrl = $"{_baseUrl}/{url}";
-
-		//    HttpResponseMessage response = await _httpClient.PostAsJsonAsync(fullUrl, loginModel);
-		//    //var loginJson = JsonSerializer.Serialize(loginModel);
-		//    //var loginContent = new StringContent(loginJson, System.Text.Encoding.UTF8, "application/json");
-
-		//    //var response = await _httpClient.PostAsync("Account/login", loginContent);
-
-		//    if (response.IsSuccessStatusCode)
-		//    {
-		//        var responseContent = await response.Content.ReadAsStringAsync();
-		//        var loginResponse = System.Text.Json.JsonSerializer.Deserialize<LoginResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-		//        if (!string.IsNullOrEmpty(loginResponse.Token))
-		//        {
-		//            // Store token in local storage
-		//            //await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", loginResponse.Token);
-		//            await _sessionStorageService.SetItemAsync("JWT_TOKEN", loginResponse.Token);
-		//            // Attach token to headers of HttpClient
-		//            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Token);
-
-		//            return "Login successful";
-		//        }
-		//    }
-
-		//    return "Invalid email or password.";
-		//}
-
+		
 		public async Task<(string message, string role)> Login(LoginModel loginModel)
 		{
 			var url = "Account/Login";
@@ -169,7 +137,7 @@ namespace EventSpaceUI.Client.Utilities
 			}
 
 			//return "Invalid email or password.";
-            return ("Login successful", null);
+            return ("Invalid Login Attempt", null);
         }
 		public async Task<string> Register(RegisterModel registerModel)
         {

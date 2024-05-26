@@ -1,4 +1,4 @@
-﻿@page "/eventform"
+﻿@* @page "/eventform"
 
 @using EventSpaceUI.Client.Utilities
 @using System.ComponentModel.DataAnnotations
@@ -259,3 +259,292 @@
 } 
 
 
+ *@
+
+        @page "/eventform"
+
+@using EventSpaceUI.Client.Utilities
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@inject HttpClient Http
+@inject IApiService _apiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRuntime
+
+@layout AdminLayout
+
+<div class="p-5 container-fluid mt-2">
+    <div class="card mt-3" style="max-width: 600px; margin: 0 auto;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4 text-white">Event Registration Form</h2>
+            <EditForm Model="@newEvent" OnValidSubmit="CreateEvent">
+                <DataAnnotationsValidator />
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="eventName" class="form-label text-white">Event Name</label>
+                        <InputText id="eventName" class="form-control form-control-sm" @bind-Value="newEvent.Name" />
+                        <ValidationMessage For="@(() => newEvent.Name)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="eventVenue" class="form-label text-white">Venue</label>
+                        <InputText id="eventVenue" class="form-control form-control-sm" @bind-Value="newEvent.Venue" />
+                        <ValidationMessage For="@(() => newEvent.Venue)" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="eventDate" class="form-label text-white">Date</label>
+                        <InputDate id="eventDate" class="form-control form-control-sm" @bind-Value="newEvent.Date" />
+                        <ValidationMessage For="@(() => newEvent.Date)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="eventArtist" class="form-label text-white">Artist</label>
+                        <InputText id="eventArtist" class="form-control form-control-sm" @bind-Value="newEvent.Artist" />
+                        <ValidationMessage For="@(() => newEvent.Artist)" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="eventType" class="form-label text-white">Event Type</label>
+                        <InputSelect id="eventType" class="form-select" @bind-Value="newEvent.EventType" @onchange="HandleSelectChange">
+                            <option value="" selected disabled>Select Event Type</option>
+                            <option value="0">Free</option>
+                            <option value="1">Fundraiser</option>
+                            <option value="2">Paid</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => newEvent.EventType)" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="startingPrice" class="form-label text-white">Starting Price</label>
+                        <InputNumber id="startingPrice" class="form-control form-control-sm" @bind-Value="newEvent.StartingPrice" disabled="@(newEvent.EventType == 0)" />
+                        <ValidationMessage For="@(() => newEvent.StartingPrice)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="totalSeats" class="form-label text-white">Total Seats</label>
+                        <InputNumber id="totalSeats" class="form-control form-control-sm" @bind-Value="newEvent.TotalSeats" />
+                        <ValidationMessage For="@(() => newEvent.TotalSeats)" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="photo" class="form-label text-white">Upload Image</label>
+                        <InputFile OnChange="@OnInputPhotoUpload" class="form-control" id="fileUpload" />
+                        <ValidationMessage For="@(() => newEvent.EventPhoto)" />
+                    </div>
+                </div>
+
+                @if (newEvent.EventType ==2)
+                {
+                    <h4 class="mt-3 mb-2 text-center text-white">Tier Details</h4>
+                    <div class="mb-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-sm btn-outline-success" @onclick="AddTier">Add Tier</button>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="tierName" class="form-label text-white">Tier Name</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tierPrice" class="form-label text-white">Tier Price</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tierSeats" class="form-label text-white">Seats</label>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    @foreach (var tier in newEvent.TierList)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <InputText class="form-control form-control-sm" @bind-Value="tier.Name" />
+                                <ValidationMessage For="@(() => tier.Name)" />
+                            </div>
+                            <div class="col-md-3">
+                                <InputNumber class="form-control form-control-sm" @bind-Value="tier.Price" />
+                                <ValidationMessage For="@(() => tier.Price)" />
+                            </div>
+                            <div class="col-md-3">
+                                <InputNumber class="form-control form-control-sm" @bind-Value="tier.TotalSeats" />
+                                <ValidationMessage For="@(() => tier.TotalSeats)" />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveTier(tier)">Remove</button>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="registerbtn">Register</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private EventRequestDTO newEvent = new EventRequestDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        newEvent.Date = DateTime.Now; 
+    }
+
+    public class EventResponseDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Venue { get; set; }
+        public DateTime Date { get; set; } 
+        public string Artist { get; set; }
+        public decimal StartingPrice { get; set; }
+        public int TotalSeats { get; set; }
+        public int AvailableSeats { get; set; }
+
+        public string EventPhoto { get; set; }
+        public string Type { get; set; }
+
+        public List<TierRequestDTO> TierList { get; set; } = new List<TierRequestDTO>();
+    }
+    public class EventRequestDTO
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Event Name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Venue is required")]
+        public string Venue { get; set; }
+
+        [Required(ErrorMessage = "Date is required")]
+        public DateTime Date { get; set; }
+
+        [Required(ErrorMessage = "Artist is required")]
+        public string Artist { get; set; }
+
+        [Range(0, double.MaxValue, ErrorMessage = "Starting Price must be a positive value")]
+        public decimal StartingPrice { get; set; }
+
+        [Required(ErrorMessage = "Total Seats are required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Total Seats must be at least 1")]
+        public int TotalSeats { get; set; }
+
+        public int AvailableSeats { get; set; }
+
+        public string EventPhoto { get; set; }
+
+        [Required(ErrorMessage = "Event Type is required")]
+        public int EventType { get; set; } = 2;
+
+        public List<TierRequestDTO> TierList { get; set; } = new List<TierRequestDTO>();
+    }
+
+    public class TierRequestDTO
+    {
+        public int? Id { get; set; }
+
+        [Required(ErrorMessage = "Tier Name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Total Seats are required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Total Seats must be at least 1")]
+        public int TotalSeats { get; set; }
+
+        [Required(ErrorMessage = "Price is required")]
+        [Range(0, int.MaxValue, ErrorMessage = "Price must be a positive value")]
+        public int Price { get; set; }
+
+        public int? AvailableSeats { get; set; }
+    }
+
+    public class TierDTO
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public int TotalSeats { get; set; }
+        public int AvailableSeats { get; set; }
+
+        public int Price { get; set; }
+        public int AmountRaised { get; set; }
+        public int EventId { get; set; }
+    }
+
+    private void AddTier()
+    {
+        newEvent.TierList.Add(new TierRequestDTO());
+    }
+
+    private void RemoveTier(TierRequestDTO tier)
+    {
+        newEvent.TierList.Remove(tier);
+    }
+
+    private void HandleSelectChange(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedValue))
+        {
+            newEvent.EventType = selectedValue;
+        }
+    }
+
+    private async Task CreateEvent()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(newEvent.EventPhoto))
+            {
+                await UploadPhoto();
+            }
+
+            var createdEvent = await _apiService.CallApiAsync<EventResponseDTO>("Event/CreateEvent", HttpMethod.Post, newEvent);
+            await jsRuntime.InvokeVoidAsync("toastr.success", "Event created successfully!");
+            NavigationManager.NavigateTo("/eventindex");
+        }
+        catch (Exception ex)
+        {
+            await jsRuntime.InvokeVoidAsync("toastr.error", "Event Registration failed", "Invalid registration");
+        }
+    }
+
+    private async Task UploadPhoto()
+    {
+        var fileContent = new MultipartFormDataContent();
+        fileContent.Add(new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(newEvent.EventPhoto))), "file", "eventImage.jpg");
+        var response = await Http.PostAsync("https://localhost:7060/api/File/upload", fileContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Handle successful upload if needed
+        }
+        else
+        {
+            // Handle upload failure if needed
+        }
+    }
+
+    private async Task OnInputPhotoUpload(InputFileChangeEventArgs e)
+    {
+        using var formData = new MultipartFormDataContent();
+
+        var file = e.File;
+        var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+        formData.Add(content: fileContent, name: "File", fileName: file.Name);
+        formData.Add(new StringContent("2"), "FilePath");
+
+        var response = await Http.PostAsync("https://localhost:7060/api/File/upload", formData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var uploadedResult = await response.Content.ReadAsStringAsync();
+            newEvent.EventPhoto = uploadedResult ?? "";
+        }
+    }
+}

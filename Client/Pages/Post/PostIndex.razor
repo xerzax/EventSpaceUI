@@ -5,6 +5,10 @@
 @using System.Security.Claims
 @inject HttpClient HttpClient
 @inject IApiService _apiService
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
 @inject HttpClient Http
 
 <div class="container-fluid p-4 mt-5">
@@ -18,12 +22,12 @@
 			</div>
 			<div class="pt-5">
 				<div class="pb-3">
-					<button type="button" class="post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#photoModal">
+					<button type="button" class="post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#photoModal" disabled="@(!isUserAuthenticated)">
 						<i class="fas fa-upload"></i> <span>Upload photo</span>
 					</button>
 				</div>
 				<div class="pb-3">
-					<button type="button" class="post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#blogModal">
+					<button type="button" class="post-btn post-btn-fill w-100" data-bs-toggle="modal" data-bs-target="#blogModal" disabled="@(!isUserAuthenticated)">
 						<i class="fas fa-pen"></i> <span>Write blog</span>
 					</button>
 				</div>
@@ -76,12 +80,57 @@
 								<div class="card-body">
 									<h2 class="card-title">@photo.Title</h2>
 									<p class="card-text">@photo.Tags</p>
+									<p class="card-text fs-5 text-muted">By @photo.CreatedBy</p>
+										<AuthorizeView>
+									<Authorized>
+								@* 	@if (photo.IsFollowedByUser)
+									{
+										<a @onclick="() => FollowUnFollow(2, photo.CreatedById)">Unfollow</a>
+									}
+									else
+									{
+										<a @onclick="() => FollowUnFollow(1, photo.CreatedById)">Follow</a>
+									} *@
+											@if (photo.IsFollowedByUser)
+											{
+												<button class="btn-sm btn-danger" @onclick="() => FollowUnFollow(2, photo.CreatedById)">Unfollow</button>
+											}
+											else
+											{
+												<button class="btn-sm btn-danger" @onclick="() => FollowUnFollow(1, photo.CreatedById)">Follow</button>
+											}
+
+									</Authorized>
+									</AuthorizeView>
 									<p class="card-text">
 										<small class="text-secondary">
 											Added date: @photo.CreatedAt.ToString("MMMM dd, yyyy")
 										</small>
 									</p>
-									@* <button class="btn btn-primary" @onclick="() => FollowUser(photo.UserId)">Follow</button> *@
+									@* @if (photo.PhotoComments != null && photo.PhotoComments.Any())
+									{
+										foreach (var comment in photo.PhotoComments)
+										{
+											<p class="card-title">@comment.CommentedBy</p>
+											<p class="card-text">@comment.Comment</p>
+										}
+									} *@
+									@if (photo.PhotoComments != null && photo.PhotoComments.Any())
+									{
+										<div class="mt-3">
+											@foreach (var comment in photo.PhotoComments)
+											{
+												<div class="mb-2">
+													<p class="text-muted mb-1"><small><strong>By: @comment.CommentedBy</strong></small></p>
+													<p class="mb-1"><small>@comment.Comment</small></p>
+												</div>
+											}
+										</div>
+									}
+
+									<AuthorizeView>
+					<Authorized>
+									
 									<div class="mt-4">
 										<h4>Add Comment</h4>
 										<textarea class="form-control" placeholder="Enter your comment" @bind=comment></textarea>
@@ -89,6 +138,9 @@
 
 
 									</div>
+					</Authorized>
+
+									</AuthorizeView>
 
 								</div>
 							</div>
@@ -124,7 +176,6 @@
 											Added Date: @blog.CreatedAt.ToString("MMMM dd, yyyy")
 										</small>
 									</p>
-									@* 	<button class="btn-main btn-main-fill" @onclick="() => FollowUser(blog.UserId)">Follow</button> *@
 								</div>
 							</div>
 						}
@@ -250,17 +301,11 @@
 	private List<Playlist> playlists;
 
 	private Blog newBlog = new Blog();
-	private List<Photo> photos;
+	private List<PhotoDetails> photos;
 	private Photo newPhoto = new Photo();
 
 	private string comment = "";
-
-
-	// [Inject]
-	// private AuthenticationStateProvider _authenticationStateProvider { get; set; }
-
-	// [Inject]
-	// private ILocalStorageService _localStorageService { get; set; }
+	private bool isUserAuthenticated { get; set; } = false;
 
 	public class Blog
 	{
@@ -284,6 +329,30 @@
 		public DateTime CreatedAt { get; set; }
 	}
 
+	public class PhotoDetails
+	{
+		public int Id { get; set; }
+
+		public string Title { get; set; }
+		public string Tags { get; set; }
+		public string PhotoName { get; set; }
+		public string CreatedBy { get; set; }
+		public bool IsFollowedByUser { get; set; }
+		public Guid CreatedById { get; set; }
+		public DateTime CreatedAt { get; set; }
+		public List<PhotoComment> PhotoComments { get; set; }
+
+	}
+
+	public class PhotoComment
+	{
+		public string CommentedUserImageUrl { get; set; }
+
+		public string CommentedBy { get; set; }
+
+		public string Comment { get; set; }
+	}
+
 	public class Playlist
 	{
 		public int Id { get; set; }
@@ -300,6 +369,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		isUserAuthenticated = authState.User.Identity.IsAuthenticated;
 		await LoadBlogs();
 		await LoadImage();
 		await LoadPlaylist();
@@ -309,11 +380,12 @@
 	private async Task LoadBlogs()
 	{
 		blogs = await _apiService.CallApiAsync<List<Blog>>("Blog/GetAllBlogs", HttpMethod.Get);
+
 	}
 
 	private async Task LoadImage()
 	{
-		photos = await _apiService.CallApiAsync<List<Photo>>("Photo/GetAllPhotos", HttpMethod.Get);
+		photos = await _apiService.CallApiAsync<List<PhotoDetails>>("Photo/GetAllPhotos", HttpMethod.Get);
 	}
 
 	private async Task LoadPlaylist()
@@ -334,7 +406,25 @@
 			PostType = typeVal,
 			Content = comment
 		};
-		var res = await _apiService.CallApiAsync<Object>("Comment/PostComment", HttpMethod.Post, obj);
+		comment = "";
+
+		await _apiService.CallApiAsync<Object>("Comment/PostComment", HttpMethod.Post, obj);
+
+		await LoadImage();
+	}
+
+	public async Task FollowUnFollow(int actionType, Guid userId)
+	{
+		if (actionType == 1)
+		{
+			await _apiService.CallApiAsync<object>($"Follow/follow-user?UserId={userId}", HttpMethod.Post);
+		}
+		else
+		{
+			await _apiService.CallApiAsync<object>($"Follow/unfollow-user?UserId={userId}", HttpMethod.Post);
+		}
+
+		await LoadImage();
 	}
 
 	private async Task CreateBlog()
@@ -464,9 +554,18 @@
 	[Inject]
 	private NavigationManager NavigationManager { get; set; }
 
-	private void NavigateToPlaylistPage()
+	private async void NavigateToPlaylistPage()
 	{
-		NavigationManager.NavigateTo("/playlist");
+		var res = await LocalStorage.GetItemAsync<string>("JWT_TOKEN");
+		if (!String.IsNullOrEmpty(res))
+		{
+			NavigationManager.NavigateTo("/playlist");
+		}
+		else
+		{
+			NavigationManager.NavigateTo("/login");
+
+		}
 	}
 }
 

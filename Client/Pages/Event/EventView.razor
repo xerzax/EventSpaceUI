@@ -4,6 +4,8 @@
 @using static EventSpaceUI.Client.Pages.Event.EventForm
 @inject IApiService _apiService
 @inject NavigationManager NavigationManager 
+@inject ILocalStorageService LocalStorage
+
 
 <div class="container p-5">
     <div class="row">
@@ -62,13 +64,16 @@
 
             @if (Event.Type == "Free")
             {
-                <button id="payment-button" class="btn btn-success mt-4" @onclick="FreeTicket">Proceed</button>
+                <button id="payment-button" class="btn btn-success mt-4" @onclick="FreeTicket">Get Free Ticket</button>
             }
 
             @if (Event.Type == "Fundraiser")
             {
+                	<AuthorizeView>
+					<Authorized>
                 <button type="button" id="proceedBtn" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#donateModal">Donate</button>
-
+                </Authorized>
+                </AuthorizeView>
             }
             <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -111,10 +116,7 @@
 
     public class FreeTicketResponse
     {
-        public int Qty { get; set; }
-        public int TotalPrice { get; set; }
-        public string Venue { get; set; }
-        public string Date { get; set; }
+        public string Message { get; set; }
     }
 
     public class PaymentRequestDTO
@@ -138,9 +140,18 @@
         }
     }
 
-    private void NavigateToTierView(int tierId)
+    private async void NavigateToTierView(int tierId)
     {
-        NavigationManager.NavigateTo($"/ticket/{EventId}/{tierId}");
+        var res = await LocalStorage.GetItemAsync<string>("token");
+        if (!String.IsNullOrEmpty(res))
+        {
+            NavigationManager.NavigateTo($"/ticket/{EventId}/{tierId}");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+
+        }
     }
 
 
@@ -177,14 +188,30 @@
 
     private async Task FreeTicket()
     {
-        var endpoint = "Ticket/FreeTicket";
+        try{
+            var token = await LocalStorage.GetItemAsync<string>("token");
+            if (!String.IsNullOrEmpty(token))
+            {
+                var endpoint = "Ticket/FreeTicket";
 
-        model.EventId = int.Parse(EventId);
+                model.EventId = int.Parse(EventId);
 
-        var res = await _apiService.CallApiAsync<FreeTicketResponse>(endpoint, HttpMethod.Post);
-        if (res != null)
+                var res = await _apiService.CallApiAsync<FreeTicketResponse>(endpoint,HttpMethod.Post,model);
+                if (res != null)
+                {
+                    NavigationManager.NavigateTo($"/freeticket");
+                }
+
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/login");
+
+            }
+        }
+        catch(Exception ex)
         {
-            NavigationManager.NavigateTo($"/ticketPurchase");
+            throw;
         }
     }
 }

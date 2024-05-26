@@ -2,59 +2,73 @@
 
 @layout AdminLayout
 
+<style>
+    .apexcharts-tooltip, .apexcharts-xaxis, .apexcharts-yaxis, .apexcharts-legend-text {
+        color: #ffffff !important;
+    }
+
+    .apexcharts-title-text {
+        fill: #ffffff !important;
+    }
+
+    .apexcharts-datalabel-label, .apexcharts-datalabel-value {
+        fill: #ffffff !important;
+    }
+
+    .apexcharts-legend {
+        color: #ffffff !important;
+    }
+</style>
 <div class="container p-5">
-    <div class="custom-box bg--secondary text-primary mb-3">
+    <div class="custom-box bg--secondary text-light mb-3">
         <h1 class="p-1">Welcome Organizer!</h1>
     </div>
-    <div class="row justify-content-between pt-5">
-        <div class="col-3 box-custom box1">
-            <h3>0</h3>
-            <p>No of events</p>
+    <div class="col-6">
+            <div class="row">
+                <DemoContainer>
+                    <ApexChart TItem="DashboardCount"
+                               Title="Gross Counts"
+                               Height="800"
+                               Width="500">
+
+                        <ApexPointSeries TItem="DashboardCount"
+                                         Items="DashboardItems"
+                                         SeriesType="SeriesType.Donut"
+                                         Name="Total Numeric Counts"
+                                         XValue="@(e => e.Title)"
+                                         YAggregate="@(e => e.Sum(e => e.Count))"
+                                         OrderByDescending="e=>e.Y" />
+                    </ApexChart>
+                </DemoContainer>
+            </div>
         </div>
-        <div class="col-3 box-custom box2">
-            <h3>0</h3>
-            <p>No of event goers</p>
-        </div>
-    </div>
-    <div class="row justify-content-between pt-5">
-        <div class="dark-box col-5">
-            <canvas id="myChart" width="200" height="100"></canvas>
-        </div>
-    </div>
 </div>
-<script type="text/javascript">
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Events by status',
-                data: [],
-                borderColor: '#020202',
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)',
-                    '#D8E0BB',
-                    '#86A3C3',
-                    '#FFC300',
-                    '#EF2E33',
-                ],
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'Event status'
-                }
-            }
-        }
-    });
-</script>
+
+
+@code {
+    public class DashboardCount
+    {
+        public string Title { get; set; }
+
+        public int Count { get; set; }
+    }
+
+    private List<DashboardCount> DashboardItems { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        DashboardItems.Add(
+            new DashboardCount()
+                {
+                    Title = "Events",
+                    Count = 10,
+                });
+        DashboardItems.Add(
+            new DashboardCount()
+            {
+                Title = "Event Goers",
+                Count = 20,
+            });
+    }
+
+}
